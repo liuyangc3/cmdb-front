@@ -6,7 +6,7 @@ angular.module('cmdb')
     .factory('MainService', ['$http', 'utils', function($http, utils){
             return {
                 get: function(){
-                    return $http.get(utils.join('project/'));
+                    return $http.get(utils.join('project/list'));
                 }
             }
     }])

@@ -12,7 +12,6 @@ angular.module('cmdb', ['ngRoute'])
         }
 })
 
-
 .config(['$routeProvider', '$locationProvider',
     function($routeProvider,$locationProvider) {
         $routeProvider

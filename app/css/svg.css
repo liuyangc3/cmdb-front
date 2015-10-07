@@ -1,0 +1,120 @@
+/* 全局 */
+body {
+    font-family: Arial,"Hiragino Sans GB","Microsoft YaHei",STHeiti,"WenQuanYi Micro Hei",SimSun,sans-serif;
+    font-size: 12px;
+}
+
+ul, ol, ul li, ol li {
+margin: 0;
+padding: 0;
+list-style-type: none;
+}
+
+.enabled {color: #468847;}
+.disabled {color: #b94a48;}
+
+
+/* 部署展示框 */
+.deploy {
+    width: 700px;
+}
+
+.deploy-title h3 {
+    display: inline-block;
+    color: #58666e;
+    font-weight: 700;
+    font-size: 14px;
+    margin: 10px 0 0;
+    padding: 0 20px;
+}
+
+.deploy-detail {margin: 10px 30px;}
+
+
+.snapshot-graph {position: relative;} /* border */
+
+/* svg */
+.snapshot-graph svg {
+position: absolute;
+left: 0;
+top: 0;
+z-index: 3;
+pointer-events: none;
+}
+.snapshot-graph path {
+stroke: #555;
+}
+.snapshot-graph circle {
+    fill: #fff;
+    stroke-width: 3px;
+    stroke: #555;
+}
+.snapshot-graph circle.full {
+    fill: #dff0d8;
+    stroke: #468847;
+}
+.snapshot-graph circle.disabled {
+    fill: #f2dede;
+    stroke: #b94a48;
+}
+
+/* 部署记录列表 */
+.snapshot-list {margin-top: 10px;}
+.snapshot-list ul {overflow: hidden;}
+.snapshot-list ul:nth-child(odd) {background: #f7f7f7;}
+.snapshot-list ul li {
+height: 32px;
+line-height: 32px;
+vertical-align: middle;
+float: left;
+}
+/* 部署记录列表 每列li class */
+.snapshot-list .background {min-width: 48px;}
+.snapshot-list .deployDir {min-width: 152px;}
+.snapshot-list .deployDir a{
+border-radius: 4px;
+background: #d9edf7;
+color: #3a87ad;
+font-family: Monaco,Menlo,Consolas,"Courier New",monospace;
+padding: 2px 4px;
+border: 1px solid #c6e4f3;
+display: inline-block;
+line-height: 16px;
+text-decoration:none;
+}
+.snapshot-list .size {width: 70px;}
+
+
+/* snapshot-legend 部署展示框右下角 */
+.snapshot-legend {float: right;}
+.snapshot-legend li {
+    /* li内,图标和文字在一行 */
+    float: left;
+    margin: 0 10px 0 0;
+    line-height: 32px;
+    vertical-align: middle;
+    color: #777;
+}
+.snapshot-legend li a {margin: 0 10px 0 0;}
+.snapshot-legend span {vertical-align: middle;}
+
+
+/* 圆形 */
+.circle {
+    width: 8px;
+    height: 8px;
+    border: 3px solid #555;
+    background: #fff;
+    display: inline-block;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* 全量部署 绿色*/
+.circle.full {
+    border-color: #468847;
+    background: #dff0d8;
+}
