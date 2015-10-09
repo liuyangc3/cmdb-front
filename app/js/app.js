@@ -9,7 +9,8 @@ angular.module('cmdb', ['ngRoute'])
                 path = path + '/' + arg;
             });
             return path
-        }
+        },
+        x: "x"
 })
 
 .config(['$routeProvider', '$locationProvider',
@@ -20,14 +21,14 @@ angular.module('cmdb', ['ngRoute'])
                 controller: 'MainCtrl as mainCtrl'
             })
             .when('/service/add',{
-                templateUrl: 'views/service/service_add.html',
-                controller: 'ServiceCtrl'
+                templateUrl: 'views/service/addservice.html',
+                controller: 'ServiceCtrl as sCtrl'
             })
             .when('/service/:service_id',{
                 templateUrl: 'views/service.html',
                 controller: 'ServiceCtrl'
             })
-            .when('/:project/:service',{
+            .when('/project/:project_id',{
                 templateUrl: 'views/project.html',
                 controller: 'ProjectCtrl as pCtrl'
             }).

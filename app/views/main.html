@@ -1,3 +1,6 @@
-<div ng-repeat="project in mainCtrl.projects">
-    <a href="{{project}}">{{project}}</a>
+<div ng-repeat="project_id in mainCtrl.projects">
+    <a href="project/{{project_id}}">{{project_id}}</a>
+</div>
+<div>
+    <a href="service/add">add service</a>
 </div>

@@ -16,8 +16,12 @@ angular.module('cmdb')
             get: function(service_id){
                return $http.get(utils.join('service', service_id))
             },
-            post: function(service_id){
-                return $http.post(utils.join('service', service_id))
+            post: function(service_id, formData){
+                return $http.post(
+                    utils.join('service', service_id),
+                    formData,
+                    {headers:{'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
+                ).success(function(resp){console.log(resp.message)})
             },
             put: function(service_id){
                 return $http.put(utils.join('service', service_id))
