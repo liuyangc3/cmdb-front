@@ -7,6 +7,11 @@ angular.module('cmdb')
             return {
                 get: function(){
                     return $http.get(utils.join('project/list'));
+                },
+                fuck: function(){
+                    return new Promise(function (res) {
+                        res('y')
+                    })
                 }
             }
     }])

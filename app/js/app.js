@@ -28,7 +28,7 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                 templateUrl: 'views/service/service.html',
                 controller: 'ServiceCtrl as sCtrl',
                 resolve: {
-                    services: function($http, util){
+                    incc: function($http, util){
                         return $http.get(
                             util.join('service', 'list')
                         )
@@ -40,7 +40,7 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
             })
             .when('/service/add',{
                 templateUrl: 'views/service/addservice.html',
-                controller: 'ServiceCtrl as sCtrl'
+                controller: 'ServiceAddCtrl as sCtrl'
             })
             .when('/service/:service_id',{
                 templateUrl: 'views/service/service_id.html',
