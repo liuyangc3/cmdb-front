@@ -1,7 +1,7 @@
 /**
  * Created by web on 2015/8/25.
  */
-angular.module('cmdb', ['ngRoute'])
+angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
 .value('utils',{
         join: function() {
             var path = "/api/v1";
@@ -9,8 +9,7 @@ angular.module('cmdb', ['ngRoute'])
                 path = path + '/' + arg;
             });
             return path
-        },
-        x: "x"
+        }
 })
 
 .config(['$routeProvider', '$locationProvider',
@@ -18,15 +17,34 @@ angular.module('cmdb', ['ngRoute'])
         $routeProvider
             .when('/', {
                 templateUrl: 'views/main.html',
-                controller: 'MainCtrl as mainCtrl'
+                controller: 'MainCtrl as mainCtrl',
+                resolve: {
+                    inc: function(MainService){
+                        return MainService.fuck()
+                    }
+                }
+            })
+            .when('/service', {
+                templateUrl: 'views/service/service.html',
+                controller: 'ServiceCtrl as sCtrl',
+                resolve: {
+                    services: function($http, util){
+                        return $http.get(
+                            util.join('service', 'list')
+                        )
+                        .then(function (resp) {
+                            return resp.data
+                        })
+                    }
+                }
             })
             .when('/service/add',{
                 templateUrl: 'views/service/addservice.html',
                 controller: 'ServiceCtrl as sCtrl'
             })
             .when('/service/:service_id',{
-                templateUrl: 'views/service.html',
-                controller: 'ServiceCtrl'
+                templateUrl: 'views/service/service_id.html',
+                controller: 'ServiceCtrl as sCtrl'
             })
             .when('/project/:project_id',{
                 templateUrl: 'views/project.html',
