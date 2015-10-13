@@ -106,8 +106,8 @@ text-decoration:none;
     border: 3px solid #555;
     background: #fff;
     display: inline-block;
-    -webkit-border-radius: 20px;
-    -moz-border-radius: 20px;
+    /*-webkit-border-radius: 20px;*/
+    /*-moz-border-radius: 20px;*/
     border-radius: 20px;
     vertical-align: middle;
     margin-right: 5px;
@@ -117,4 +117,15 @@ text-decoration:none;
 .circle.full {
     border-color: #468847;
     background: #dff0d8;
+}
+
+#fields tbody th button.delete {
+    background: url(../image/delete-mini.png) no-repeat;
+    border: none;
+    cursor: pointer;
+    float: left;
+    margin: .2em 5px 0 -20px;
+    padding: 0;
+    width: 15px;
+    height: 15px;
 }
