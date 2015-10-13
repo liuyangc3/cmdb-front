@@ -3,64 +3,78 @@
  */
 
 angular.module('cmdb')
-    .factory('MainService', ['$http', 'utils', function($http, utils){
-            return {
-                get: function(){
-                    return $http.get(utils.join('project/list'));
-                },
-                fuck: function(){
-                    return new Promise(function (res) {
-                        res('y')
-                    })
-                }
-            }
-    }])
-
-    .factory('ServiceService',['$http', 'utils', function($http, utils){
+    .factory('ServiceService', ['$http', 'cmdbApiPrefix',
+    function($http, cmdbApiPrefix) {
+        var serviceApiPrefix = cmdbApiPrefix + 'service/';
         return {
-            get: function(service_id){
-               return $http.get(utils.join('service', service_id))
+            // 在 angular v13 中
+            // $http.get() 可以直接返回 promise
+            // 这样就不需要 使用 $q.defer()
+            // 来处理$http的结果
+            //
+            // v12 需要这样处理:
+            // var deferred = $q.defer();
+            // $http.get(_utils.join('service/list'))
+            //   .success(function (data) {deferred.resolve(data)})
+            //   .error(function(error){deferred.reject(error)});
+            // return deferred.promise;
+
+            list: function () {
+                return $http.get(serviceApiPrefix + 'list')
             },
-            post: function(service_id, formData){
-                return $http.post(
-                    utils.join('service', service_id),
-                    formData,
-                    {headers:{'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'}}
-                ).success(function(resp){console.log(resp.message)})
+            get: function (service_id) {
+                return $http.get(serviceApiPrefix + service_id)
             },
-            put: function(service_id){
-                return $http.put(utils.join('service', service_id))
+            post: function (service_id, formData) {
+                return $http({
+                    url: serviceApiPrefix + service_id,
+                    method: 'POST',
+                    data: formData
+                })
             },
-            del: function(service_id){
-                return $http.delete(utils.join('service', service_id))
+            put: function (service_id, formData) {
+                return $http({
+                    url: serviceApiPrefix + service_id,
+                    method: 'PUT',
+                    data: formData
+                })
+            },
+            del: function (service_id) {
+                return $http({
+                    url: serviceApiPrefix + service_id,
+                    method: 'DELETE'
+                });
             }
         }
     }])
 
-    .factory('ProjectService',['$http', '_path',
-        function($http, _path){
+    .factory('ProjectService',['$http','cmdbApiPrefix',
+        function($http, cmdbApiPrefix){
+            var projectApiPrefix = cmdbApiPrefix + 'project/';
             return {
-                getServiceIp: function(projectName){
-                    return $http.get(_path.join(projectName, 'service/tomcat'));
+                list: function(){
+                    return $http.get(projectApiPrefix + 'list')
+                },
+                get: function(project_id){
+                    return $http.get(projectApiPrefix + project_id)
                 }
             }
         }
     ])
-    .factory('DeploymentService', ['$http', '_path',
-        function($http, _path) {
-            return {
-                getDeployment: function(projectName, ip) {
-                    return $http.get(_path.join(projectName, ip, 'deployments'));
-                },
-                getDeploymentDetail: function(projectName, ip, deployDate) {
-                    return $http.get(_path.join(projectName, ip, 'deployments', deployDate, 'detail'));
-                },
-                doDeploy: function(ip){
-                    return $http.post();
-                },
-                rollback: function(ip){
-                    return $http.post();
-                }
-            }
-        }])
-;
+
+    .factory('InitDataService', ['$q', 'ServiceService', 'ProjectService',
+        function ($q, ServiceService, ProjectService) {
+        return function() {
+            var services = ServiceService.list();
+            var projects = ProjectService.list();
+            return $q.all([services, projects]).then(function(results){
+                return {
+                    getServices: angular.fromJson(results[0].data),
+                    getProjects: angular.fromJson(results[1].data)
+                };
+            }, function(error){
+                console.log('ServiceError: InitDataService', error.status, error.data);
+            });
+        }
+    }]);
+
