@@ -31,7 +31,7 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                     }
                 })
                 .when('/service/add',{
-                    templateUrl: 'views/service/addService.html',
+                    templateUrl: 'views/service/addservice.html',
                     controller: 'ServiceAddCtrl',
                     controllerAs: 'sCtrl'
                 })
