@@ -1,1 +1,36 @@
-<div>{{sCtrl.services}}</div>
+
+<div>
+    <table id="fields">
+        <thead>
+            <tr>
+                <th class="col-sm-8">key</th>
+                <th class="col-sm-8">value</th>
+                <!--<th class="col-sm-4">name</th>-->
+                <!--<th class="col-sm-4">type</th>-->
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th class="col-sm-8">ip</th>
+                <td class="col-sm-8">{{sidCtrl.service.ip}}</td>
+            </tr>
+            <tr>
+                <th class="col-sm-8">port</th>
+                <th class="col-sm-8">{{sidCtrl.service.port}}</th>
+            </tr>
+            <tr>
+                <th class="col-sm-8">type</th>
+                <td class="col-sm-8">{{sidCtrl.service.type}}</td>
+            </tr>
+            <tr>
+                <th class="col-sm-8">
+                    <button type="button" class="delete"></button>
+                    <b>name</b>
+                </th>
+                <td class="col-sm-8">{{sidCtrl.service.name}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div id="rev" class="hidden">{{sidCtrl.service._rev}}</div>
+<div id="sid" class="hidden">{{sidCtrl.service._id}}</div>
