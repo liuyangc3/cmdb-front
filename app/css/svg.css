@@ -129,3 +129,25 @@ text-decoration:none;
     width: 15px;
     height: 15px;
 }
+
+/* 输入框 后缀 */
+.input-group.input-group-customstyle input.form-control {
+    border-radius: 4px;
+}
+.input-group-customstyle .input-group-addon {
+    border-radius: 4px;
+    border: 0;
+    background-color: transparent;
+}
+
+#fields tbody td span button.apply {
+    background: transparent url(../image/apply.gif) no-repeat 0 0;
+    border: none;
+    cursor: pointer;
+    display: block;
+    width: 11px;
+    height: 11px;
+    /*margin: 2px 2px 0;*/
+    float: right;
+
+}

@@ -1,6 +1,14 @@
 /**
  * Created by web on 2015/8/25.
  */
+
+// 给String增加startsWith function
+if (typeof String.prototype.startsWith != 'function') {
+    String.prototype.startsWith = function (str){
+        return this.slice(0, str.length) == str;
+    };
+}
+
 angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
     // 定义api前缀常量
     .constant('cmdbApiPrefix', '/api/v1/')
