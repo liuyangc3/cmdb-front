@@ -140,14 +140,31 @@ text-decoration:none;
     background-color: transparent;
 }
 
-#fields tbody td span button.apply {
+#toolbar button {
+    background: transparent 2px 2px no-repeat;
+    border: none;
+    margin: 0;
+    padding: 2px 1em 2px 0;
+    cursor: pointer;
+    line-height: 16px;
+}
+#toolbar button.save {
+    background-image: url(../image/save.png);
+}
+#toolbar button.add {
+    background-image: url(../image/add.png);
+}
+#toolbar button.delete {
+    background-image: url(../image/delete.png);
+}
+
+#fields tbody span button.apply {
     background: transparent url(../image/apply.gif) no-repeat 0 0;
     border: none;
     cursor: pointer;
     display: block;
     width: 11px;
     height: 11px;
-    /*margin: 2px 2px 0;*/
     float: right;
 
 }
