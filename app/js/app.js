@@ -1,7 +1,7 @@
 /**
  * Created by web on 2015/8/25.
  */
-
+'use strict';
 // 给String增加startsWith function
 if (typeof String.prototype.startsWith != 'function') {
     String.prototype.startsWith = function (str){
@@ -43,6 +43,13 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                     controller: 'ServiceAddCtrl',
                     controllerAs: 'sCtrl'
                 })
+                // --------------------------------------------------
+                .when('/service2/:service_id',{
+                    templateUrl: 'views/service/service2.html',
+                    controller: 'sid2Ctrl',
+                    controllerAs:'sid2Ctrl'
+                })
+
                 .when('/service/:service_id',{
                     templateUrl: 'views/service/service.html',
                     controller: 'ServiceIdCtrl',

@@ -3,7 +3,7 @@
 <ul id="toolbar" class="row">
   <li><button class="col-md-2 save">Save Service</button></li>
   <li><button class="col-md-2 add" ng-click="sidCtrl.addField()">Add Field</button></li>
-  <li><button class="col-md-2 delete">Delete Document…</button></li>
+  <li><button class="col-md-2 delete">Delete Service</button></li>
 </ul>
 
 <div>
@@ -20,7 +20,7 @@
             ng-hide="sidCtrl.isPrivateField(field)">
           <div class="input-group input-group-customstyle">
             <span class="input-group-addon">
-              <!--  删除整行按钮 -->
+              <!-- delete row button -->
               <button type="button" class="delete"
                       ng-hide="sidCtrl.isConstField(field) || sidCtrl.service[field].filedTransform"
                       ng-click="sidCtrl.deleteAttr(field)">

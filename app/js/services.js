@@ -1,7 +1,7 @@
 /**
  * Created by web on 2015/8/25.
  */
-
+'use strict';
 angular.module('cmdb')
     .factory('ServiceService', ['$http', 'cmdbApiPrefix',
     function($http, cmdbApiPrefix) {

@@ -119,16 +119,7 @@ text-decoration:none;
     background: #dff0d8;
 }
 
-#fields tbody th button.delete {
-    background: url(../image/delete-mini.png) no-repeat;
-    border: none;
-    cursor: pointer;
-    float: left;
-    margin: .2em 5px 0 -20px;
-    padding: 0;
-    width: 15px;
-    height: 15px;
-}
+
 
 /* 输入框 后缀 */
 .input-group.input-group-customstyle input.form-control {
@@ -158,7 +149,18 @@ text-decoration:none;
     background-image: url(../image/delete.png);
 }
 
-#fields tbody span button.apply {
+#service_id tbody th button.delete {
+    background: url(../image/delete-mini.png) no-repeat;
+    border: none;
+    cursor: pointer;
+    float: left;
+    margin: .2em 5px 0 -20px;
+    padding: 0;
+    width: 15px;
+    height: 15px;
+}
+
+#service_id tbody span button.apply {
     background: transparent url(../image/apply.gif) no-repeat 0 0;
     border: none;
     cursor: pointer;
@@ -166,5 +168,4 @@ text-decoration:none;
     width: 11px;
     height: 11px;
     float: right;
-
 }

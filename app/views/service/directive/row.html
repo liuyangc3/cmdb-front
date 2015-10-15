@@ -1,0 +1,31 @@
+<th class="col-md-4">
+  <div class="input-group input-group-customstyle">
+  <span class="input-group-addon">
+    <button type="button" class="delete"></button>
+    <span ng-show="showKey" ng-dblclick="transformNgShow(showKey)">
+      {{bindKey}}
+    </span>
+    <input ng-hide="showKey" type="text" ng-model="bindKey"/>
+    <span class="input-group-addon">
+      <button ng-hide="showKey" ng-click="transformNgShow(showKey)"
+              type="button" class="apply">
+      </button>
+    </span>
+  </span>
+  </div>
+</th>
+<td class="col-md-4">
+  <div class="input-group input-group-customstyle">
+  <span class="input-group-addon">
+    <span ng-show="showValue" ng-dblclick="transformNgShow(showValue)">
+      {{bindValue}}
+    </span>
+    <input ng-hide="showValue" type="text" ng-model="bindValue"/>
+    <span class="input-group-addon">
+      <button ng-hide="showValue" ng-click="transformNgShow(showValue)"
+              type="button" class="apply">
+      </button>
+    </span>
+  </span>
+  </div>
+</td>
