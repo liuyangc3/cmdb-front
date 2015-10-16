@@ -1,0 +1,20 @@
+<div class="input-group input-group-customstyle">
+  <span ng-hide="praviteKey()" class="input-group-addon">
+    <button ng-hide="reservedKey()"
+            type="button" class="delete"
+            ng-click="deleteRow()"></button>
+    <span title="双击编辑" ng-show="yes" ng-dblclick="transToInputbox()">
+      {{bindValue}}
+    </span>
+    <input ng-hide="yes" type="text" ng-model="bindValue"/>
+    <span class="input-group-addon">
+      <button ng-hide="yes" ng-click="saveKey()"
+              type="button" class="apply">
+      </button>
+    </span>
+  </span>
+
+  <span ng-hide="!praviteKey()" class="input-group-addon">
+  {{bindValue}}
+  </span>
+</div>
