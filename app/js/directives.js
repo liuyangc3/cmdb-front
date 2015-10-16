@@ -3,54 +3,55 @@
  */
 'use strict';
 angular.module('cmdb')
-  .directive('myTr', [function(){
-        return {
-            restrict: 'AE',
-            templateUrl: 'views/service/directive/mytr.html',
-            scope: {
-                bindValue: '='
-            },
-            replace: true,
-            link: function(scope){
-                scope.showKey = true;
-                scope.showValue = true;
-                scope.transformNgShow = function(value){
-                    value = !value
-                };
-            }
-        }
 
-    }])
-  .directive('row',[function(){
-        return {
-            restrict: 'AE',
-            templateUrl: 'views/service/directive/row.html',
-            scope: {
-                bindKey: '=',
-                bindValue: '='
-            },
-            replace: true,
-            link: function(scope){
-                scope.showKey = true;
-                scope.showValue = true;
-                scope.transformNgShow = function(value){
-                    value = !value
-                };
-            }
-        }
-    }])
   .directive('rowKey',[function(){
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowKey.html',
             scope: {
-                bindValue: '='
+                bindValue: '=',
+                deleteRow: '&',
+                modifyTableKey: '&'
             },
             replace: true,
-            link: function(scope){
+            link : function(scope, element, attr){
+                // 并行指令通知机制
+                //scope.$parent.$broadcast('keyModify', someValue);
+                scope.praviteKey = function(){
+                    return (scope.bindValue == '_id' || scope.bindValue == '_rev');
+
+                };
                 scope.yes = true;
-                scope.transformNgShow = function(){
+                scope.valueBefore = scope.bindValue;
+                scope.reservedKey = function(){
+                    // 只有非保留字段才能删除
+                    switch(scope.bindValue){
+                        case '_id': return true;
+                        case '_rev': return true;
+                        case 'type': return true;
+                        case 'ip': return true;
+                        case 'port': return true;
+                        case 'name': return true;
+                        default : return false
+                    }
+                };
+                scope.transToInputbox = function(){
                     scope.yes = !scope.yes;
+                };
+                scope.saveKey = function(){
+                    scope.yes = !scope.yes;
+                    if(scope.bindValue == scope.valueBefore){
+                        return
+                    }
+                    try {
+                        scope.modifyTableKey({
+                            key: scope.valueBefore,
+                            newkey: scope.bindValue
+                        })();
+                    } catch(error) {
+                        alert(error); // TODO：提示更友好一些
+                        scope.bindValue = scope.valueBefore;
+                    }
                 };
             }
         }
@@ -60,14 +61,19 @@ angular.module('cmdb')
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowValue.html',
             scope: {
+                bindKey: '=',
                 bindValue: '='
             },
             replace: true,
-            link: function(scope){
+            link: function(scope, element, attr){
+                //scope.$on('keyModify', function(e, data) {
+                //    console.log('yes message: '+ data)
+                //});
                 scope.yes = true;
                 scope.transformNgShow = function(){
                     scope.yes = !scope.yes;
                 };
+
             }
         }
     }])

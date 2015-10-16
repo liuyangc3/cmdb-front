@@ -3,6 +3,25 @@
  */
 'use strict';
 angular.module('cmdb')
+    .factory('tableData', function(){ // 表格数据函数
+        return {
+            init: function (data) { // {key: value} --> {key: {v: value}}
+                var _data = {};
+                angular.forEach(data, function(value,key){
+                    _data[key] = {v:value}
+                });
+                return _data;
+            },
+            revert: function(data) { // {key: {v: value}} --> {key: value}
+                var _data = {};
+                angular.forEach(data, function(value,key){
+                    _data[key] = value.v;
+
+                });
+                return _data;
+            }
+        }
+    })
     .factory('ServiceService', ['$http', 'cmdbApiPrefix',
     function($http, cmdbApiPrefix) {
         var serviceApiPrefix = cmdbApiPrefix + 'service/';

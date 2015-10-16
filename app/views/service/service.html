@@ -1,71 +1,26 @@
-
-
-<ul id="toolbar" class="row">
-  <li><button class="col-md-2 save">Save Service</button></li>
-  <li><button class="col-md-2 add" ng-click="sidCtrl.addField()">Add Field</button></li>
-  <li><button class="col-md-2 delete">Delete Service</button></li>
-</ul>
-
 <div>
-  <table id="fields" class="table table-condensed table-hover">
+  <table id="service_id" class="table table-condensed table-hover">
     <thead>
-      <tr class="row">
-        <th class="col-md-4">key</th>
-        <th class="col-md-4">value</th>
-      </tr>
+    <tr class="row">
+      <th class="col-md-4">key</th>
+      <th class="col-md-4">value</th>
+    </tr>
     </thead>
     <tbody>
-      <tr class="row" ng-repeat="(field, service) in sidCtrl.service">
-        <th class="col-md-4"
-            ng-hide="sidCtrl.isPrivateField(field)">
-          <div class="input-group input-group-customstyle">
-            <span class="input-group-addon">
-              <!-- delete row button -->
-              <button type="button" class="delete"
-                      ng-hide="sidCtrl.isConstField(field) || sidCtrl.service[field].filedTransform"
-                      ng-click="sidCtrl.deleteAttr(field)">
-              </button>
-            </span>
-            <span ng-show="!sidCtrl.service[field].filedTransform"
-               ng-dblclick="sidCtrl.transformField(field)">
-              {{service.key}}
-            </span>
-            <input type="text"
-                   class=""
-                   ng-model="service.key"
-                   ng-show="sidCtrl.service[field].filedTransform" />
-            <span class="input-group-addon">
-              <button type="button"
-                      class="apply"
-                      ng-show="sidCtrl.service[field].filedTransform"
-                      ng-click="sidCtrl.transformField(field)">
-              </button>
-            </span>
-          </div>
-        </th>
-        <td class="col-md-4"
-            ng-hide="sidCtrl.isPrivateField(field)">
-          <span ng-show="!sidCtrl.service[field].valueTransform"
-                ng-dblclick="sidCtrl.transformValue(field)">
-            {{service.value}}
-          </span>
-          <div class="input-group input-group-customstyle">
-            <input type="text"
-                   class=""
-                   ng-model="service.value"
-                   ng-show="sidCtrl.service[field].valueTransform" />
-            <span class="input-group-addon">
-              <button type="button"
-                      class="apply"
-                      ng-show="sidCtrl.service[field].valueTransform"
-                      ng-click="sidCtrl.transformValue(field)">
-              </button>
-            </span>
-          </div>
-        </td>
-      </tr>
+    <tr class="row" ng-repeat="(key, value) in sidCtrl.service">
+      <th class="col-md-4">
+            <row-key bind-key="key" bind-value="key"
+                     modify-table-key="sidCtrl.modifyTableKey(key, newkey)"
+                     delete-row="sidCtrl.deleteTableRow(key)">
+            </row-key>
+      </th>
+      <td class="col-md-4">
+            <row-value  bind-key="key" bind-value="value.v"></row-value>
+      </td>
+    </tr>
     </tbody>
   </table>
 </div>
-<div id="rev" class="hidden">{{sidCtrl.service._rev.value}}</div>
-<div id="sid" class="hidden">{{sidCtrl.service._id.value}}</div>
+
+<!--<div>{{sidCtrl.service}}-->
+<!--</div>-->
