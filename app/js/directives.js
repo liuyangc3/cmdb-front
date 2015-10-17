@@ -17,6 +17,7 @@ angular.module('cmdb')
             link : function(scope, element, attr){
                 // 并行指令通知机制
                 //scope.$parent.$broadcast('keyModify', someValue);
+
                 scope.praviteKey = function(){
                     return (scope.bindValue == '_id' || scope.bindValue == '_rev');
 

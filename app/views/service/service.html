@@ -1,3 +1,9 @@
+<ul id="toolbar" class="row">
+  <li><button class="col-md-2 save">Save Service</button></li>
+  <li><button class="col-md-2 add" ng-click="sidCtrl.addTableRow()">Add Field</button></li>
+  <li><button class="col-md-2 delete">Delete Service</button></li>
+</ul>
+
 <div>
   <table id="service_id" class="table table-condensed table-hover">
     <thead>
@@ -10,7 +16,7 @@
     <tr class="row" ng-repeat="(key, value) in sidCtrl.service">
       <th class="col-md-4">
             <row-key bind-key="key" bind-value="key"
-                     modify-table-key="sidCtrl.modifyTableKey(key, newkey)"
+                     modify-table-key="sidCtrl.modifyRowKey(key, newkey)"
                      delete-row="sidCtrl.deleteTableRow(key)">
             </row-key>
       </th>
