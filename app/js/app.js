@@ -31,12 +31,12 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                 .when('/service', {
                     templateUrl: 'views/service/listService.html',
                     controller: 'ServiceCtrl',
-                    controllerAs: 'sCtrl',
-                    resolve: {
-                        initData: function(InitDataService){
-                            return InitDataService();
-                        }
-                    }
+                    controllerAs: 'sCtrl'
+                    //resolve: {
+                    //    initData: function(InitDataService){
+                    //        return InitDataService();
+                    //    }
+                    //}
                 })
                 .when('/service/add',{
                     templateUrl: 'views/service/addservice.html',

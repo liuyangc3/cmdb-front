@@ -3,6 +3,18 @@
  */
 'use strict';
 angular.module('cmdb')
+    .factory('msgBus', ['$rootScope', function($rootScope){
+        return {
+            emitMsg: function (msg) {
+                $rootScope.$emit(msg);
+            },
+            onMsg: function (msg, scope, func) {
+                var unbound = $rootScope.$on(msg, func);
+                scope.$on('$destroy', unbound);
+            }
+        }
+    }])
+
     .factory('tableData', function(){ // 表格数据函数
         return {
             init: function (data) { // {key: value} --> {key: {v: value}}
