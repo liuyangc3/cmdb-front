@@ -19,47 +19,68 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
             $routeProvider
                 .when('/', {
-                    templateUrl: 'views/main.html',
-                    controller: 'MainCtrl',
-                    controllerAs: 'mCtrl',
-                    resolve: {
-                        initData: function(InitDataService){
-                            return InitDataService();
-                        }
+                    templateUrl: 'views/main.html'
                     }
-                })
+                )
                 .when('/service', {
                     templateUrl: 'views/service/listService.html',
                     controller: 'ServiceCtrl',
-                    controllerAs: 'sCtrl'
-                    //resolve: {
-                    //    initData: function(InitDataService){
-                    //        return InitDataService();
-                    //    }
-                    //}
+                    controllerAs: 'sCtrl',
+                    resolve: {
+                        services: ['ServiceService', function(ServiceService){
+                            return ServiceService.list().then(function(resp){
+                                return angular.fromJson(resp.data);
+                            });
+                        }]
+                    }
                 })
-                .when('/service/add',{
+                .when('/service/add', {
                     templateUrl: 'views/service/addservice.html',
                     controller: 'ServiceAddCtrl',
                     controllerAs: 'sCtrl'
                 })
-                .when('/service/:service_id',{
+                .when('/service/:service_id', {
                     templateUrl: 'views/service/service.html',
                     controller: 'ServiceIdCtrl',
                     controllerAs: 'sidCtrl'
                 })
-                .when('/project/:project_id',{
-                    templateUrl: 'views/project.html',
-                    controller: 'ProjectCtrl as pCtrl'
+                .when('/project', {
+                    templateUrl: 'views/project/listProject.html',
+                    controller: 'ProjectCtrl',
+                    controllerAs: 'pCtrl',
+                    resolve: {
+                        projects: ['ProjectService', function(ProjectService){
+                            return ProjectService.list().then(function(resp){
+                                return angular.fromJson(resp.data);
+                            })
+                        }]
+                    }
+                })
+                .when('/project/add', {
+                    templateUrl: 'views/project/addProject.html',
+                    controller: 'ProjectAddCtrl',
+                    controllerAs: 'pCtrl',
+                    resolve: {
+                        services: ['ServiceService', function (ServiceService) {
+                            return ServiceService.list().then(function (resp) {
+                                return angular.fromJson(resp.data);
+                            });
+                        }]
+                    }
+                })
+                .when('/project/:project_id', {
+                    templateUrl: 'views/project/project.html',
+                    controller: 'ProjectIdCtrl',
+                    controllerAs: 'pidCtrl'
                 }).
-                when('/:ip/deployment',{
-                    templateUrl: 'views/deployment.html',
-                    controller: 'ProjectDeploymentCtrl as pdmCtrl'
-                }).
-                when('/:projectName/:ip/deployment/:deployDate/detail',{
-                    templateUrl: '../views/deploymentdetail.html',
-                    controller: 'ProjectDeploymentDetailCtrl as pddCtrl'
-                }).
+                //when('/:ip/deployment', {
+                //    templateUrl: 'views/deployment.html',
+                //    controller: 'ProjectDeploymentCtrl as pdmCtrl'
+                //}).
+                //when('/:projectName/:ip/deployment/:deployDate/detail', {
+                //    templateUrl: '../views/deploymentdetail.html',
+                //    controller: 'ProjectDeploymentDetailCtrl as pddCtrl'
+                //}).
                 otherwise({
                     redirectTo: '/'
                 });

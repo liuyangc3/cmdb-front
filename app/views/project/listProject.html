@@ -1,0 +1,17 @@
+<div class="col-md-12">
+  <button type="button" ng-click="pCtrl.reload()">刷新</button>
+  <table>
+    <thead>
+    <tr>
+      <th>project id</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr ng-repeat="project_id in pCtrl.projects">
+      <td>
+        <a href="project/{{project_id}}">{{project_id}}</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

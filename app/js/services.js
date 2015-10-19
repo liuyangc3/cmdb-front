@@ -83,29 +83,44 @@ angular.module('cmdb')
         function($http, cmdbApiPrefix){
             var projectApiPrefix = cmdbApiPrefix + 'project/';
             return {
-                list: function(){
-                    return $http.get(projectApiPrefix + 'list')
+                list: function() {
+                    return $http.get(projectApiPrefix + 'list');
                 },
-                get: function(project_id){
-                    return $http.get(projectApiPrefix + project_id)
+                get: function(project_id) {
+                    return $http.get(projectApiPrefix + project_id);
+                },
+                post: function(project_id, formData) {
+                    return $http({
+                        url: projectApiPrefix + project_id,
+                        method: 'POST',
+                        data: formData
+                    });
+                },
+                put: function(project_id, formData) {
+                    return $http({
+                        url: projectApiPrefix + project_id,
+                        method: 'PUT',
+                        data: formData
+                    });
                 }
             }
         }
     ])
 
-    .factory('InitDataService', ['$q', 'ServiceService', 'ProjectService',
-        function ($q, ServiceService, ProjectService) {
-        return function() {
-            var services = ServiceService.list();
-            var projects = ProjectService.list();
-            return $q.all([services, projects]).then(function(results){
-                return {
-                    getServices: angular.fromJson(results[0].data),
-                    getProjects: angular.fromJson(results[1].data)
-                };
-            }, function(error){
-                console.log('ServiceError: InitDataService', error.status, error.data);
-            });
-        }
-    }]);
+    //.factory('InitDataService', ['$q', 'ServiceService', 'ProjectService',
+    //    function ($q, ServiceService, ProjectService) {
+    //    return function() {
+    //        var services = ServiceService.list();
+    //        var projects = ProjectService.list();
+    //        return $q.all([services, projects]).then(function(results){
+    //            return {
+    //                getServices: angular.fromJson(results[0].data),
+    //                getProjects: angular.fromJson(results[1].data)
+    //            };
+    //        }, function(error){
+    //            console.log('ServiceError: InitDataService', error.status, error.data);
+    //        });
+    //    }
+    //}])
+;
 

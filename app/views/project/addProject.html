@@ -1,0 +1,60 @@
+<script type="text/ng-template" id="alert.html">
+  <div class="alert" style="background-color:#fa39c3;color:white" role="alert">
+    <div ng-transclude></div>
+  </div>
+</script>
+
+<uib-alert ng-repeat="alert in pCtrl.alerts"
+           type="{{alert.type}}"
+           close="pCtrl.closeAlert($index)">{{alert.msg}}</uib-alert>
+
+
+<form name="project" class="form-horizontal" ng-submit="pCtrl.submit()">
+  <fieldset>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="projectId">项目名称</label>
+      <div class="controls col-sm-4">
+        <input type="text"
+               class="form-control"
+               id="projectId"
+               placeholder="项目名称"
+               ng-model="pCtrl.project_id"
+               tabindex="1"
+               required
+               autofocus>
+      </div>
+
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="projectServices">services</label>
+      <div class="controls col-sm-4">
+          <div ng-repeat="added in pCtrl.servicesAdded track by $index">
+            <em>{{added}}</em>
+            <a ng-click="pCtrl.deleteService(added, $index)" href>x</a>
+          </div>
+          <input type="text"
+                 class="form-control"
+                 id="projectServices"
+                 name="projectServices"
+                 placeholder="添加服务"
+                 tabindex="2"
+                 ng-model="pCtrl.formData.service">
+          <!-- input value search -->
+            <span uib-dropdown uib-keyboard-nav is-open="pCtrl.matched">
+              <ul class="uib-dropdown-menu" uib-dropdown-toggle>
+                <li ng-repeat="service in pCtrl.match">
+                  <a  ng-click="pCtrl.saveService(service)" href>{{service}}</a>
+                </li>
+              </ul>
+            </span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2"></label>
+      <div class="col-sm-4">
+        <button type="submit" class="btn btn-primary" tabindex="3">Submit</button>
+      </div>
+    </div>
+  </fieldset>
+</form>
+

@@ -9,19 +9,23 @@
            close="sCtrl.closeAlert($index)">{{alert.msg}}</uib-alert>
 
 
-<form name="serviceForm" class="form-horizontal" ng-submit="sCtrl.serviceSubmit()">
+<form name="service" class="form-horizontal" ng-submit="sCtrl.submit()">
     <fieldset>
         <div class="form-group">
-            <label class="control-label col-sm-2" for="serviceId">id</label>
+            <label class="control-label col-sm-2" for="serviceId">ip:port</label>
             <div class="controls col-sm-4">
                 <input type="text"
                        class="form-control"
+                       id="serviceId"
                        name="serviceId"
+                       tabindex="1"
                        placeholder="ip:port"
                        ng-model="sCtrl.service_id"
-                       ng-pattern="/\d{1,3}(.\d{1,3}){3}:\d{1,5}/"
+                       ng-pattern="/^\d{1,3}(.\d{1,3}){3}:\d{1,5}$/"
+                       required
                        autofocus>
-                <span class="col-sm-4" ng-show="serviceForm.serviceId.$invalid">格式错误</span>
+                <span class="col-sm-4" 
+                      ng-show="!service.serviceId.$error.required && service.serviceId.$invalid">格式错误</span>
             </div>
 
         </div>
@@ -30,15 +34,16 @@
             <div class="controls col-sm-4">
                 <input type="text"
                        class="form-control"
-                       name="serviceName"
+                       id="serviceName"
+                       tabindex="2"
                        placeholder="service name"
-                       ng-model="sCtrl.serviceFormData.name">
+                       ng-model="sCtrl.formData.name">
             </div>
         </div>
         <div class="form-group">
             <label class="control-label col-sm-2"></label>
             <div class="col-sm-4">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" tabindex="3">Submit</button>
             </div>
         </div>
     </fieldset>

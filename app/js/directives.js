@@ -67,9 +67,6 @@ angular.module('cmdb')
             },
             replace: true,
             link: function(scope, element, attr){
-                //scope.$on('keyModify', function(e, data) {
-                //    console.log('yes message: '+ data)
-                //});
                 scope.yes = true;
                 scope.transformNgShow = function(){
                     scope.yes = !scope.yes;
