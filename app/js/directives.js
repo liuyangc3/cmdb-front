@@ -4,7 +4,7 @@
 'use strict';
 angular.module('cmdb')
 
-  .directive('rowKey',[function(){
+  .directive('serviceTableKey',[function(){
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowKey.html',
@@ -14,34 +14,25 @@ angular.module('cmdb')
                 modifyTableKey: '&'
             },
             replace: true,
-            link : function(scope, element, attr){
+            link: function (scope) {
                 // 并行指令通知机制
                 //scope.$parent.$broadcast('keyModify', someValue);
-
-                scope.praviteKey = function(){
-                    return (scope.bindValue == '_id' || scope.bindValue == '_rev');
-
+                scope.reservedKey = function () {
+                    // 不能删除,不能编辑的 key
+                    return (scope.bindValue == 'name' || scope.bindValue == '_rev');
                 };
-                scope.yes = true;
+                scope.showThis = true;
                 scope.valueBefore = scope.bindValue;
-                scope.reservedKey = function(){
-                    // 只有非保留字段才能删除
-                    switch(scope.bindValue){
-                        case '_id': return true;
-                        case '_rev': return true;
-                        case 'type': return true;
-                        case 'ip': return true;
-                        case 'port': return true;
-                        case 'name': return true;
-                        default : return false
+
+                scope.transEditState = function () {
+                    if (!scope.reservedKey()) {
+                        scope.showThis = !scope.showThis;
                     }
                 };
-                scope.transToInputbox = function(){
-                    scope.yes = !scope.yes;
-                };
-                scope.saveKey = function(){
-                    scope.yes = !scope.yes;
-                    if(scope.bindValue == scope.valueBefore){
+                scope.saveKey = function () {
+                    scope.showThis = !scope.showThis;
+                    if (scope.bindValue == scope.valueBefore) {
+                        // 未作任何修改
                         return
                     }
                     try {
@@ -49,15 +40,15 @@ angular.module('cmdb')
                             key: scope.valueBefore,
                             newkey: scope.bindValue
                         })();
-                    } catch(error) {
+                    } catch (error) {
                         alert(error); // TODO：提示更友好一些
                         scope.bindValue = scope.valueBefore;
                     }
                 };
-            }
-        }
-    }])
-    .directive('rowValue',[function(){
+            } // link end
+        }}])
+
+    .directive('serviceTableValue',[function(){
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowValue.html',
@@ -67,12 +58,12 @@ angular.module('cmdb')
             },
             replace: true,
             link: function(scope, element, attr){
-                scope.yes = true;
-                scope.transformNgShow = function(){
-                    scope.yes = !scope.yes;
+                scope.showThis = true;
+                scope.transEditState = function() {
+                    if('_rev' != scope.bindKey) {
+                        scope.showThis = !scope.showThis;
+                    }
                 };
-
             }
-        }
-    }])
+        }}])
 ;

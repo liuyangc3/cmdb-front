@@ -42,7 +42,14 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                 .when('/service/:service_id', {
                     templateUrl: 'views/service/service.html',
                     controller: 'ServiceIdCtrl',
-                    controllerAs: 'sidCtrl'
+                    controllerAs: 'sidCtrl',
+                    resolve: {
+                        rawData: ['$route', 'ServiceService', function($route, ServiceService) {
+                                return ServiceService.get($route.current.params.service_id).then(function(resp){
+                                        return angular.fromJson(resp.data);
+                                    });
+                            }]
+                    }
                 })
                 .when('/project', {
                     templateUrl: 'views/project/listProject.html',

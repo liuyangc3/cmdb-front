@@ -1,24 +1,18 @@
 <div class="input-group input-group-customstyle">
-  <span ng-hide="praviteKey()" class="input-group-addon">
-    <button ng-hide="reservedKey()"
-            type="button" class="delete"
-            ng-click="deleteRow()"></button>
-    <span title="双击编辑"
-          ng-show="yes"
-          ng-dblclick="transToInputbox()">
-      {{bindValue}}
-    </span>
-    <input ng-hide="yes"
-           type="text"
-           ng-model="bindValue"/>
-    <span class="input-group-addon">
-      <button ng-hide="yes" ng-click="saveKey()"
-              type="button" class="apply">
-      </button>
-    </span>
-  </span>
+  <!-- 可编辑 -->
+  <span class="input-group-addon">
+    <button ng-hide="reservedKey()" class="delete" ng-click="deleteRow()"></button>
+    <span ng-show="showThis" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
 
-  <span ng-hide="!praviteKey()" class="input-group-addon">
-  {{bindValue}}
+    <label>
+      <input ng-show="!showThis" type="text" ng-model="bindValue" ng-blur="transEditState()"/>
+    </label>
+    <span class="input-group-addon">
+      <button ng-show="!showThis" ng-click="saveKey()" type="button" class="apply"></button>
+    </span>
   </span>
+  <!--&lt;!&ndash; 不可编辑 &ndash;&gt;-->
+  <!--<span ng-show="reservedKey()" class="input-group-addon">-->
+    <!--{{bindValue}}-->
+  <!--</span>-->
 </div>

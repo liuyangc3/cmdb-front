@@ -15,22 +15,30 @@ angular.module('cmdb')
         }
     }])
 
-    .factory('tableData', function(){ // 表格数据函数
+    .factory('dataTransService', function(){
+        // 数据格式转化，用于页面展示
+        // {key: value} --> {key: {v: value}}
+        // {key: {v: value}} --> {key: value}
         return {
-            init: function (data) { // {key: value} --> {key: {v: value}}
+            init: function (data) {
                 var _data = {};
-                angular.forEach(data, function(value,key){
+                angular.forEach(data, function(value, key) {
                     _data[key] = {v:value}
                 });
                 return _data;
             },
-            revert: function(data) { // {key: {v: value}} --> {key: value}
+            revert: function(data) {
                 var _data = {};
-                angular.forEach(data, function(value,key){
+                angular.forEach(data, function(value, key) {
                     _data[key] = value.v;
-
                 });
                 return _data;
+            },
+            excludeKey: function(data, array) {
+                angular.forEach(array, function(exclude) {
+                    delete data[exclude];
+                });
+                return data;
             }
         }
     })
