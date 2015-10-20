@@ -12,7 +12,7 @@ angular.module('cmdb')
                 bindValue: '=',
                 pushAlert: '&',
                 deleteRow: '&',
-                modifyTableKey: '&'
+                modifyRowKey: '&'
             },
             replace: true,
             link: function (scope, element) {
@@ -43,7 +43,7 @@ angular.module('cmdb')
                         return
                     }
                     try {
-                        scope.modifyTableKey({
+                        scope.modifyRowKey({
                             key: scope.bindValue,
                             newkey: scope.inputText
                         })();
@@ -61,7 +61,8 @@ angular.module('cmdb')
             templateUrl: 'views/service/directive/rowValue.html',
             scope: {
                 bindKey: '=',
-                bindValue: '='
+                bindValue: '=',
+                modifyRowValue: '&'
             },
             replace: true,
             link: function(scope, element, attr){
@@ -70,14 +71,24 @@ angular.module('cmdb')
                 scope.transEditState = function() {
                     // ²»ÄÜ±à¼­µÄ key
                     if(
-                        '_rev' != scope.bindKey ||
-                        'ip'   != scope.bindKey ||
-                        'port' != scope.bindKey ||
+                        '_rev' != scope.bindKey &&
+                        'ip'   != scope.bindKey &&
+                        'port' != scope.bindKey &&
                         'type' != scope.bindKey
                     ) {
                         scope.showThis = !scope.showThis;
-                        scope.bindValue = scope.inputText;
                     }
+                };
+                scope.saveValue = function() {
+                    scope.showThis = !scope.showThis;
+                    if(scope.inputText == scope.bindValue) {
+                        return
+                    }
+                    scope.modifyRowValue({
+                        key: scope.bindKey,
+                        value: scope.inputText
+                    })();
+                    //scope.bindValue = scope.inputText;
                 };
             }
         }}])

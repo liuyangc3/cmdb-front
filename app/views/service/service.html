@@ -17,12 +17,15 @@
       <th class="col-md-4">
         <service-table-key bind-value="key"
                            push-alert="sidCtrl.pushAlert(msg)"
-                           modify-table-key="sidCtrl.modifyRowKey(key, newkey)"
+                           modify-row-key="sidCtrl.modifyRowKey(key, newkey)"
                            delete-row="sidCtrl.deleteTableRow(key)">
         </service-table-key>
       </th>
       <td class="col-md-4">
-        <service-table-value  bind-key="key" bind-value="data.v"></service-table-value>
+        <service-table-value  bind-key="key"
+                              bind-value="data.v"
+                              modify-row-value="sidCtrl.modifyRowValue(key, value)">
+        </service-table-value>
       </td>
     </tr>
     </tbody>
@@ -38,3 +41,5 @@
 <uib-alert ng-repeat="alert in sidCtrl.alerts" type="{{alert.type}}" close="sidCtrl.closeAlert($index)">
   {{alert.msg}}
 </uib-alert>
+
+{{sidCtrl.service}}

@@ -1,7 +1,7 @@
 <div class="input-group input-group-customstyle">
   <span ng-show="showThis" ng-dblclick="transEditState()">{{bindValue}}</span>
   <label>
-    <input ng-show="!showThis" type="text" ng-model="inputText" ng-blur="transEditState()"/>
+    <input ng-show="!showThis" type="text" ng-model="inputText" autofocus/>
   </label>
     <button ng-show="!showThis" ng-click="saveValue()" class="apply"></button>
 </div>

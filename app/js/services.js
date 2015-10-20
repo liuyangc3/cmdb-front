@@ -29,11 +29,12 @@ angular.module('cmdb')
             },
             revert: function(data) {
                 var _data = {};
-                angular.forEach(data, function(value, key) {
+                angular.forEach(data, function(valueObj, key) {
+                    var value = valueObj.v;
                     if(value.startsWith('[') && value.endsWith(']')) {
-                        _data[key] = angular.fromJson(value.v);
-                    } else{
-                        _data[key] = value.v;
+                        _data[key] = angular.fromJson(value);
+                    } else {
+                        _data[key] = value;
                     }
                 });
                 return _data;
