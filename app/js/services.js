@@ -30,7 +30,11 @@ angular.module('cmdb')
             revert: function(data) {
                 var _data = {};
                 angular.forEach(data, function(value, key) {
-                    _data[key] = value.v;
+                    if(value.startsWith('[') && value.endsWith(']')) {
+                        _data[key] = angular.fromJson(value.v);
+                    } else{
+                        _data[key] = value.v;
+                    }
                 });
                 return _data;
             },
@@ -115,6 +119,40 @@ angular.module('cmdb')
         }
     ])
 
+    .factory('TableService', function() {
+        return {
+            getRowName: function(data) {
+                // new row name format: unnamed n, n is number
+                // suffixArray = [0,1,...n]
+                var prefix = 'unnamed';
+                var suffixArray = [];
+                angular.forEach(data, function(value, key) {
+                    if(prefix == key) {
+                        suffixArray.push(0);
+                    }
+                    else if(key.startsWith('unnamed ')) {
+                        var suffix = parseInt(key.substr(8));
+                        if (angular.isNumber(suffix)){
+                            suffixArray.push(suffix);
+                        }
+                    }
+                });
+
+                var suffix = 0;
+                if (0 == suffixArray.length) {
+                    return prefix
+                }
+                suffixArray.sort();
+                while(1) {
+                    if(suffix == suffixArray[suffix]) {
+                        suffix++;
+                    } else {
+                        return prefix + ' ' + suffix;
+                    }
+                }
+            }
+        }
+    })
     //.factory('InitDataService', ['$q', 'ServiceService', 'ProjectService',
     //    function ($q, ServiceService, ProjectService) {
     //    return function() {

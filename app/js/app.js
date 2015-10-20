@@ -9,6 +9,12 @@ if (typeof String.prototype.startsWith != 'function') {
     };
 }
 
+if (typeof String.prototype.endsWith != 'function') {
+    String.prototype.endsWith = function (str){
+        return this.slice(-(str.length)) == str;
+    };
+}
+
 angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
     // 定义api前缀常量
     .constant('cmdbApiPrefix', '/api/v1/')
@@ -78,7 +84,15 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                 .when('/project/:project_id', {
                     templateUrl: 'views/project/project.html',
                     controller: 'ProjectIdCtrl',
-                    controllerAs: 'pidCtrl'
+                    controllerAs: 'pidCtrl',
+                    resolve: {
+                        rawData: ['$route', 'ProjectService', function($route, ProjectService) {
+                            return ProjectService.get($route.current.params.project_id)
+                                .then(function(resp) {
+                                    return angular.fromJson(resp.data);
+                                })
+                        }]
+                    }
                 }).
                 //when('/:ip/deployment', {
                 //    templateUrl: 'views/deployment.html',

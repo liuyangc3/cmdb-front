@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title></title>
-</head>
-<body>
-
-</body>
-</html>
+<div class="input-group input-group-customstyle">
+  <button ng-show="!isReservedKey()" class="delete" ng-click="deleteRow()"></button>
+  <span ng-show="showThis" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
+  <label>
+    <input ng-show="!showThis" type="text" ng-model="inputText"  autofocus/>
+  </label>
+  <button ng-show="!showThis" ng-click="saveKey()" type="button" class="apply"></button>
+</div>

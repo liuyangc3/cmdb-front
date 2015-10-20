@@ -19,14 +19,20 @@ angular.module('cmdb')
                 // 并行指令通知机制
                 //scope.$parent.$broadcast('keyModify', someValue);
 
-                scope.reservedKey = function () {
-                    // 不能删除,不能编辑的 key
-                    return (scope.bindValue == 'name' || scope.bindValue == '_rev');
+                scope.isReservedKey = function () {
+                    // 不能删除, 不能修改名称的 key
+                    return (
+                        scope.bindValue == '_rev' ||
+                        scope.bindValue == 'ip'   ||
+                        scope.bindValue == 'port' ||
+                        scope.bindValue == 'type' ||
+                        scope.bindValue == 'name'
+                    );
                 };
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
                 scope.transEditState = function () {
-                    if (!scope.reservedKey()) {
+                    if (!scope.isReservedKey()) {
                         scope.showThis = !scope.showThis;
                     }
                 };
@@ -60,36 +66,51 @@ angular.module('cmdb')
             replace: true,
             link: function(scope, element, attr){
                 scope.showThis = true;
-                scope.valueBefore = scope.bindValue;
+                scope.inputText = scope.bindValue;
                 scope.transEditState = function() {
-                    if('_rev' != scope.bindKey) {
+                    // 不能编辑的 key
+                    if(
+                        '_rev' != scope.bindKey ||
+                        'ip'   != scope.bindKey ||
+                        'port' != scope.bindKey ||
+                        'type' != scope.bindKey
+                    ) {
                         scope.showThis = !scope.showThis;
-                        scope.bindValue = scope.valueBefore;
+                        scope.bindValue = scope.inputText;
                     }
                 };
             }
         }}])
+
     .directive('projectTableKey',[function(){
         return {
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowKey.html',
             scope: {
-                bindValue: '='
+                bindValue: '=',
+                pushAlert: '&',
+                deleteRow: '&',
+                modifyTableKey: '&'
             },
             replace: true,
             link: function(scope){
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
-                scope.reservedKey = function() {
+                scope.isReservedKey = function() {
                     // 不能删除的 key
-                    return (scope.bindValue == 'services' || scope.bindValue == '_rev');
-                };
-                scope.isEditable = function() {
-                    // 不能编辑的key
-                    return  scope.bindValue == '_rev';
+                    return (
+                        scope.bindValue == '_rev' ||
+                        scope.bindValue == 'type' ||
+                        scope.bindValue == 'services'
+                    );
                 };
                 scope.transEditState = function() {
-                    if('_rev' != scope.bindKey) {
+                    // 不能编辑的 key
+                    if(
+                        '_rev' != scope.bindKey ||
+                        'type' != scope.bindKey ||
+                        'services' != scope.bindKey
+                    ) {
                         scope.showThis = !scope.showThis;
                         scope.inputText = scope.bindValue;
                     }
