@@ -1,10 +1,10 @@
-/**
+    /**
  * Created by web on 2015/10/15.
  */
 'use strict';
 angular.module('cmdb')
 
-    .directive('serviceTableKey',[function(){
+    .directive('serviceTableKey', [function() {
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowKey.html',
@@ -16,11 +16,11 @@ angular.module('cmdb')
             },
             replace: true,
             link: function (scope, element) {
-                // ≤¢––÷∏¡ÓÕ®÷™ª˙÷∆
+                // Âπ∂Ë°åÊåá‰ª§ÈÄöÁü•Êú∫Âà∂
                 //scope.$parent.$broadcast('keyModify', someValue);
 
                 scope.isReservedKey = function () {
-                    // ≤ªƒ‹…æ≥˝, ≤ªƒ‹–ﬁ∏ƒ√˚≥∆µƒ key
+                    // ‰∏çËÉΩÂà†Èô§, ‰∏çËÉΩ‰øÆÊîπÂêçÁß∞ÁöÑ key
                     return (
                         scope.bindValue == '_rev' ||
                         scope.bindValue == 'ip'   ||
@@ -39,7 +39,6 @@ angular.module('cmdb')
                 scope.saveKey = function () {
                     scope.showThis = !scope.showThis;
                     if (scope.inputText == scope.bindValue) {
-                        // Œ¥◊˜»Œ∫Œ–ﬁ∏ƒ
                         return
                     }
                     try {
@@ -55,7 +54,7 @@ angular.module('cmdb')
             } // link end
         }}])
 
-    .directive('serviceTableValue',[function(){
+    .directive('serviceTableValue',[function() {
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowValue.html',
@@ -69,7 +68,7 @@ angular.module('cmdb')
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
                 scope.transEditState = function() {
-                    // ≤ªƒ‹±‡º≠µƒ key
+                    // ‰∏çËÉΩÁºñËæëÁöÑ key
                     if(
                         '_rev' != scope.bindKey &&
                         'ip'   != scope.bindKey &&
@@ -92,7 +91,7 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('projectTableKey',[function(){
+    .directive('projectTableKey', [function() {
         return {
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowKey.html',
@@ -103,11 +102,12 @@ angular.module('cmdb')
                 modifyTableKey: '&'
             },
             replace: true,
-            link: function(scope){
+            link: function(scope, element){
+                var input = element.find('input')[0];
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
                 scope.isReservedKey = function() {
-                    // ≤ªƒ‹…æ≥˝µƒ key
+                    // ‰∏çËÉΩÂà†Èô§ÁöÑ key
                     return (
                         scope.bindValue == '_rev' ||
                         scope.bindValue == 'type' ||
@@ -115,15 +115,21 @@ angular.module('cmdb')
                     );
                 };
                 scope.transEditState = function() {
-                    // ≤ªƒ‹±‡º≠µƒ key
+                    // ‰∏çËÉΩÁºñËæëÁöÑ key
                     if(
                         '_rev' != scope.bindValue &&
                         'type' != scope.bindValue &&
                         'services' != scope.bindValue
                     ) {
                         scope.showThis = !scope.showThis;
+                        input.focus();
+
+
                         scope.inputText = scope.bindValue;
                     }
+                };
+                scope.blur = function() {
+                    scope.showThis = !scope.showThis;
                 };
                 scope.saveKey = function() {
                     scope.showThis = !scope.showThis;
@@ -155,16 +161,21 @@ angular.module('cmdb')
             },
             replace: true,
             link: function(scope, element, attr){
-                scope.showThis = true;
+                var input = element.find('input');
+                scope.showThis = true;//alert(scope.ff);
                 scope.inputText = scope.bindValue;
                 scope.transEditState = function() {
-                    // ≤ªƒ‹±‡º≠µƒ value
+                    // ‰∏çËÉΩÁºñËæëÁöÑ value
                     if(
                         '_rev' != scope.bindKey &&
                         'type' != scope.bindKey
                     ) {
                         scope.showThis = !scope.showThis;
+                        input.focus();
                     }
+                };
+                scope.blur = function() {
+                    scope.showThis = !scope.showThis;
                 };
                 scope.saveValue = function() {
                     scope.showThis = !scope.showThis;
@@ -183,4 +194,35 @@ angular.module('cmdb')
                 };
             }
         }}])
+
+    .directive('myFocus', ['$timeout', function($timeout) {
+        return {
+            //priority: 2,
+            scope : {
+                myFocus: '@'
+            },
+            link: function(scope, element) {
+                console.log(scope.showThis);
+                function doFocus(){
+                    $timeout(function() {
+                        element[0].focus();
+                    }, 200);
+                }
+
+                //if(scope.focus != null) {
+                //    // ÂÄº‰∏∫Â≠óÁ¨¶‰∏≤‰∏ç‰∏∫ false ÂæóÂà∞ÁÑ¶ÁÇπ
+                //    if(scope.focus !== 'false') {
+                //        doFocus();
+                //    }
+                //    // ÁõëËßÜfocusÂÄº
+                //    scope.$watch('myFocus', function(value){
+                //        alert(value);
+                //        if(value === 'true') {
+                //            doFocus();
+                //        }
+                //    }, true);
+                //}
+            }
+        }
+    }])
 ;

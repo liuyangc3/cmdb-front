@@ -50,9 +50,13 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                     controller: 'ServiceIdCtrl',
                     controllerAs: 'sidCtrl',
                     resolve: {
-                        rawData: ['$route', 'ServiceService', function($route, ServiceService) {
-                                return ServiceService.get($route.current.params.service_id).then(function(resp){
-                                        return angular.fromJson(resp.data);
+                        rawData: ['$route', 'dataTransService', 'ServiceService',
+                            function($route, dataTransService, ServiceService) {
+                                return ServiceService.get($route.current.params.service_id)
+                                    .then(function(resp){
+                                        return dataTransService.init(
+                                            dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
+                                        )
                                     });
                             }]
                     }
