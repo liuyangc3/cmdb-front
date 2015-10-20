@@ -1,6 +1,6 @@
 <ul id="toolbar" class="row">
   <li><button class="col-md-2 save" ng-click="pidCtrl.saveTable()">Save Service</button></li>
-  <li><button class="col-md-2 add" ng-click="pidCtrl.addTableRow()">Add Field</button></li>
+  <li><button class="col-md-2 add" ng-click="pidCtrl.newTableRow()">Add Field</button></li>
   <li><button class="col-md-2 delete" ng-click="pidCtrl.deleteTable()">Delete Service</button></li>
 </ul>
 
@@ -21,7 +21,11 @@
         </project-table-key>
       </th>
       <td class="col-md-4">
-        <project-table-value  bind-key="key" bind-value="data.v"></project-table-value>
+        <project-table-value  bind-key="key"
+                              bind-value="data.v"
+                              modify-row-value="pidCtrl.modifyRowValue(key, value)"
+                              push-alert="pidCtrl.pushAlert(msg)">
+        </project-table-value>
       </td>
     </tr>
     </tbody>

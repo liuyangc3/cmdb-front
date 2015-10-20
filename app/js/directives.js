@@ -4,7 +4,7 @@
 'use strict';
 angular.module('cmdb')
 
-  .directive('serviceTableKey',[function(){
+    .directive('serviceTableKey',[function(){
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowKey.html',
@@ -88,7 +88,6 @@ angular.module('cmdb')
                         key: scope.bindKey,
                         value: scope.inputText
                     })();
-                    //scope.bindValue = scope.inputText;
                 };
             }
         }}])
@@ -118,11 +117,67 @@ angular.module('cmdb')
                 scope.transEditState = function() {
                     // 不能编辑的 key
                     if(
-                        '_rev' != scope.bindKey ||
-                        'type' != scope.bindKey ||
-                        'services' != scope.bindKey
+                        '_rev' != scope.bindValue &&
+                        'type' != scope.bindValue &&
+                        'services' != scope.bindValue
                     ) {
                         scope.showThis = !scope.showThis;
+                        scope.inputText = scope.bindValue;
+                    }
+                };
+                scope.saveKey = function() {
+                    scope.showThis = !scope.showThis;
+                    if (scope.inputText == scope.bindValue) {
+                        return
+                    }
+                    try {
+                        scope.modifyTableKey({
+                            key: scope.bindValue,
+                            newkey: scope.inputText
+                        })();
+                    } catch (error) {
+                        scope.pushAlert({msg: error})();
+                        scope.inputText = scope.bindValue;
+                    }
+                };
+            }
+        }}])
+
+    .directive('projectTableValue',[function(){
+        return {
+            restrict: 'AE',
+            templateUrl: 'views/project/directive/rowValue.html',
+            scope: {
+                bindKey: '=',
+                bindValue: '=',
+                pushAlert: '&',
+                modifyRowValue: '&'
+            },
+            replace: true,
+            link: function(scope, element, attr){
+                scope.showThis = true;
+                scope.inputText = scope.bindValue;
+                scope.transEditState = function() {
+                    // 不能编辑的 value
+                    if(
+                        '_rev' != scope.bindKey &&
+                        'type' != scope.bindKey
+                    ) {
+                        scope.showThis = !scope.showThis;
+                    }
+                };
+                scope.saveValue = function() {
+                    scope.showThis = !scope.showThis;
+                    if(scope.inputText == scope.bindValue) {
+                        return
+                    }
+                    try {
+                        scope.modifyRowValue({
+                            key: scope.bindKey,
+                            value: scope.inputText
+                        })();
+                    } catch(error) {
+                        scope.pushAlert({msg: error})();
                         scope.inputText = scope.bindValue;
                     }
                 };
