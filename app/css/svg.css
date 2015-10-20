@@ -154,18 +154,18 @@ text-decoration:none;
     border: none;
     cursor: pointer;
     float: left;
-    margin: .2em 5px 0 -20px;
+    margin: .2em 5px 0 -40px;
     padding: 0;
     width: 15px;
     height: 15px;
 }
 
-#service_id tbody span button.apply {
+#service_id tbody button.apply {
     background: transparent url(../image/apply.gif) no-repeat 0 0;
     border: none;
-    cursor: pointer;
-    display: block;
+    /*cursor: pointer;*/
+    /*display: block;*/
     width: 11px;
     height: 11px;
-    float: right;
+    /*float: right;*/
 }

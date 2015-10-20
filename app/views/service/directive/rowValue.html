@@ -1,11 +1,7 @@
 <div class="input-group input-group-customstyle">
-  <span class="input-group-addon">
-    <span ng-show="showThis" ng-dblclick="transEditState()">{{bindValue}}</span>
-    <label>
-      <input ng-show="!showThis" type="text" ng-model="bindValue" ng-blur="transEditState()"/>
-    </label>
-    <span class="input-group-addon">
-      <button ng-show="!showThis" ng-click="transEditState()" class="apply"></button>
-    </span>
-  </span>
+  <span ng-show="showThis" ng-dblclick="transEditState()">{{bindValue}}</span>
+  <label>
+    <input ng-show="!showThis" type="text" ng-model="bindValue" ng-blur="transEditState()"/>
+  </label>
+    <button ng-show="!showThis" ng-click="transEditState()" class="apply"></button>
 </div>

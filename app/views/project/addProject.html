@@ -4,9 +4,9 @@
   </div>
 </script>
 
-<uib-alert ng-repeat="alert in pCtrl.alerts"
-           type="{{alert.type}}"
-           close="pCtrl.closeAlert($index)">{{alert.msg}}</uib-alert>
+<uib-alert ng-repeat="alert in pCtrl.alerts" type="{{alert.type}}" close="pCtrl.closeAlert($index)">
+  {{alert.msg}}
+</uib-alert>
 
 
 <form name="project" class="form-horizontal" ng-submit="pCtrl.submit()">

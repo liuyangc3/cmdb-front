@@ -1,18 +1,8 @@
 <div class="input-group input-group-customstyle">
-  <!-- 可编辑 -->
-  <span class="input-group-addon">
-    <button ng-hide="reservedKey()" class="delete" ng-click="deleteRow()"></button>
-    <span ng-show="showThis" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
-
-    <label>
-      <input ng-show="!showThis" type="text" ng-model="bindValue" ng-blur="transEditState()"/>
-    </label>
-    <span class="input-group-addon">
-      <button ng-show="!showThis" ng-click="saveKey()" type="button" class="apply"></button>
-    </span>
-  </span>
-  <!--&lt;!&ndash; 不可编辑 &ndash;&gt;-->
-  <!--<span ng-show="reservedKey()" class="input-group-addon">-->
-    <!--{{bindValue}}-->
-  <!--</span>-->
+  <button ng-hide="reservedKey()" class="delete" ng-click="deleteRow()"></button>
+  <span ng-show="showThis" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
+  <label>
+    <input ng-show="!showThis" type="text" ng-model="inputText"  autofocus/>
+  </label>
+    <button ng-show="!showThis" ng-click="saveKey()" type="button" class="apply"></button>
 </div>
