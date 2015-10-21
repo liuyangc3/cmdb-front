@@ -149,7 +149,7 @@ text-decoration:none;
     background-image: url(../image/delete.png);
 }
 
-#service_id tbody th button.delete {
+.table tbody th button.delete {
     background: url(../image/delete-mini.png) no-repeat;
     border: none;
     cursor: pointer;
@@ -159,8 +159,7 @@ text-decoration:none;
     width: 15px;
     height: 15px;
 }
-
-#service_id tbody button.apply {
+.table tbody button.apply {
     background: transparent url(../image/apply.gif) no-repeat 0 0;
     border: none;
     /*cursor: pointer;*/
@@ -169,3 +168,4 @@ text-decoration:none;
     height: 11px;
     /*float: right;*/
 }
+

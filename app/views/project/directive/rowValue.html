@@ -1,7 +1,10 @@
 <div class="input-group input-group-customstyle">
-  <span ng-show="showThis" ng-dblclick="transEditState()">{{bindValue}}</span>
+  <button ng-show="bindKey == 'services'" ng-click="transServiceEditState()">e</button>
+  <b>
+  </b>
+  <span ng-show="show()" class="col-md-4" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
   <label>
-    <input ng-show="!showThis" type="text" ng-model="inputText" autofocus/>
+    <input ng-show="!showThis" type="text" ng-model="inputText" />
   </label>
-    <button ng-show="!showThis" ng-click="saveValue()" class="apply"></button>
+  <button ng-show="!showThis" ng-click="saveValue()" class="apply"></button>
 </div>

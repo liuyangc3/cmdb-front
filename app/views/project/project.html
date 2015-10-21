@@ -1,11 +1,12 @@
+
 <ul id="toolbar" class="row">
-  <li><button class="col-md-2 save" ng-click="pidCtrl.saveTable()">Save Service</button></li>
+  <li><button class="col-md-2 save" ng-click="pidCtrl.saveTable()">Save Project</button></li>
   <li><button class="col-md-2 add" ng-click="pidCtrl.newTableRow()">Add Field</button></li>
-  <li><button class="col-md-2 delete" ng-click="pidCtrl.deleteTable()">Delete Service</button></li>
+  <li><button class="col-md-2 delete" ng-click="pidCtrl.deleteTable()">Delete Project</button></li>
 </ul>
 
 <div>
-  <table id="service_id" class="table table-hover">
+  <table class="table table-hover">
     <thead>
     <tr class="row">
       <th class="col-md-4">key</th>
@@ -14,13 +15,13 @@
     </thead>
     <tbody>
     <tr class="row" ng-repeat="(key, data) in pidCtrl.project">
-      <th class="col-md-4">
+      <th >
         <project-table-key bind-value="key"
                            modify-table-key="pidCtrl.modifyRowKey(key, newkey)"
                            delete-row="pidCtrl.deleteTableRow(key)">
         </project-table-key>
       </th>
-      <td class="col-md-4">
+      <td>
         <project-table-value  bind-key="key"
                               bind-value="data.v"
                               modify-row-value="pidCtrl.modifyRowValue(key, value)"
@@ -31,3 +32,13 @@
     </tbody>
   </table>
 </div>
+
+<script type="text/ng-template" id="alert.html">
+  <div class="alert" style="background-color:#fa39c3;color:white" role="alert">
+    <div ng-transclude></div>
+  </div>
+</script>
+
+<uib-alert ng-repeat="alert in pidCtrl.alerts" type="{{alert.type}}" close="pidCtrl.closeAlert($index)">
+  {{alert.msg}}
+</uib-alert>

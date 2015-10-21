@@ -4,7 +4,7 @@
 'use strict';
 angular.module('cmdb')
 
-    .directive('serviceTableKey', [function() {
+    .directive('serviceTableKey', ['$timeout', function($timeout) {
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowKey.html',
@@ -29,11 +29,20 @@ angular.module('cmdb')
                         scope.bindValue == 'name'
                     );
                 };
+                var input = element.find('input');
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
                 scope.transEditState = function () {
                     if (!scope.isReservedKey()) {
                         scope.showThis = !scope.showThis;
+                        // 自动获得焦点
+                        // 因为DOM 改变后input 元素才出现
+                        // 这里需要异步执行 input.focus
+                        // 第三个参数 false 表示不把匿名函数包裹在 $apply里执行
+                        $timeout(function() {
+                            input.focus();
+                            input.select();
+                        }, 0, false)
                     }
                 };
                 scope.saveKey = function () {
@@ -54,7 +63,7 @@ angular.module('cmdb')
             } // link end
         }}])
 
-    .directive('serviceTableValue',[function() {
+    .directive('serviceTableValue',['$timeout', function($timeout) {
         return {
             restrict: 'AE',
             templateUrl: 'views/service/directive/rowValue.html',
@@ -65,7 +74,12 @@ angular.module('cmdb')
             },
             replace: true,
             link: function(scope, element, attr){
+                var input = element.find('input');
+                console.log(attr);
                 scope.showThis = true;
+                //scope.$watch(attr.showThis, function(v){
+                //    console.log(v);
+                //});
                 scope.inputText = scope.bindValue;
                 scope.transEditState = function() {
                     // 不能编辑的 key
@@ -73,16 +87,18 @@ angular.module('cmdb')
                         '_rev' != scope.bindKey &&
                         'ip'   != scope.bindKey &&
                         'port' != scope.bindKey &&
-                        'type' != scope.bindKey
-                    ) {
+                        'type' != scope.bindKey)
+                    {
                         scope.showThis = !scope.showThis;
+                        $timeout(function() {
+                            input.focus();
+                            input.select();
+                        }, 0, false)
                     }
                 };
                 scope.saveValue = function() {
                     scope.showThis = !scope.showThis;
-                    if(scope.inputText == scope.bindValue) {
-                        return
-                    }
+                    if(scope.inputText == scope.bindValue) {return}
                     scope.modifyRowValue({
                         key: scope.bindKey,
                         value: scope.inputText
@@ -91,7 +107,9 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('projectTableKey', [function() {
+    // project --------------------------------------------------------------------------------
+
+    .directive('projectTableKey', ['$timeout', function($timeout) {
         return {
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowKey.html',
@@ -103,7 +121,7 @@ angular.module('cmdb')
             },
             replace: true,
             link: function(scope, element){
-                var input = element.find('input')[0];
+                var input = element.find('input');
                 scope.showThis = true;
                 scope.inputText = scope.bindValue;
                 scope.isReservedKey = function() {
@@ -116,20 +134,16 @@ angular.module('cmdb')
                 };
                 scope.transEditState = function() {
                     // 不能编辑的 key
-                    if(
-                        '_rev' != scope.bindValue &&
+                    if('_rev' != scope.bindValue &&
                         'type' != scope.bindValue &&
-                        'services' != scope.bindValue
-                    ) {
+                        'services' != scope.bindValue)
+                    {
                         scope.showThis = !scope.showThis;
-                        input.focus();
-
-
-                        scope.inputText = scope.bindValue;
+                        $timeout(function() {
+                            input.focus();
+                            input.select();
+                        }, 0, false);
                     }
-                };
-                scope.blur = function() {
-                    scope.showThis = !scope.showThis;
                 };
                 scope.saveKey = function() {
                     scope.showThis = !scope.showThis;
@@ -149,7 +163,7 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('projectTableValue',[function(){
+    .directive('projectTableValue',['$timeout', function($timeout){
         return {
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowValue.html',
@@ -160,10 +174,63 @@ angular.module('cmdb')
                 modifyRowValue: '&'
             },
             replace: true,
+            controller: function($scope, $element) {
+                if('services' === $scope.bindKey) {
+                    $scope.services = angular.fromJson($scope.bindValue);
+                    var html = '';
+                    var b = $element.find('b');
+                    angular.forEach($scope.services, function(service) {
+                        html += '<a href="service/'+ service + '">' + service + '</a>'
+                    });
+                    b.html(html);
+                }
+                //console.log('controller');
+        },
+            compile: function(element, attrs, transclude) {
+                return {
+                    pre: function() {
+                        var b = element.find('b');
+                        console.log(b);
+
+
+                    }
+                }
+            },
             link: function(scope, element, attr){
                 var input = element.find('input');
-                scope.showThis = true;//alert(scope.ff);
-                scope.inputText = scope.bindValue;
+                //var b = element.find('b');
+                scope.showThis = true;
+
+                if('services' === scope.bindKey) {
+                    scope.services = angular.fromJson(scope.bindValue);
+                    scope.inputText = '';
+                    var html = '';
+                    angular.forEach(scope.services, function(service) {
+                        html += '<a href="service/'+ service + '">' + service + '</a>'
+                    });
+                    b.html(html);
+                    scope.$watch(function() {return scope.inputText}, function(newValue, oldValue) {
+                        if(newValue) {console.log(newValue, oldValue);}
+                    });
+                } else {
+                    scope.inputText = scope.bindValue;
+                }
+
+                scope.show = function () {
+                    // services not show
+                    if('services' === scope.bindKey) {
+                        return false;
+                    } else {
+                        return scope.showThis;
+                    }
+                };
+
+                scope.transServiceEditState = function() {
+                    //b.empty();
+                    scope.showThis = !scope.showThis;
+
+                };
+
                 scope.transEditState = function() {
                     // 不能编辑的 value
                     if(
@@ -171,12 +238,13 @@ angular.module('cmdb')
                         'type' != scope.bindKey
                     ) {
                         scope.showThis = !scope.showThis;
-                        input.focus();
+                        $timeout(function() {
+                            input.focus();
+                            input.select();
+                        }, 0, false);
                     }
                 };
-                scope.blur = function() {
-                    scope.showThis = !scope.showThis;
-                };
+
                 scope.saveValue = function() {
                     scope.showThis = !scope.showThis;
                     if(scope.inputText == scope.bindValue) {
@@ -195,34 +263,4 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('myFocus', ['$timeout', function($timeout) {
-        return {
-            //priority: 2,
-            scope : {
-                myFocus: '@'
-            },
-            link: function(scope, element) {
-                console.log(scope.showThis);
-                function doFocus(){
-                    $timeout(function() {
-                        element[0].focus();
-                    }, 200);
-                }
-
-                //if(scope.focus != null) {
-                //    // 值为字符串不为 false 得到焦点
-                //    if(scope.focus !== 'false') {
-                //        doFocus();
-                //    }
-                //    // 监视focus值
-                //    scope.$watch('myFocus', function(value){
-                //        alert(value);
-                //        if(value === 'true') {
-                //            doFocus();
-                //        }
-                //    }, true);
-                //}
-            }
-        }
-    }])
 ;

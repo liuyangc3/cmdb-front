@@ -110,6 +110,12 @@ angular.module('cmdb')
                         method: 'PUT',
                         data: formData
                     });
+                },
+                del: function (project_id) {
+                    return $http({
+                        url: projectApiPrefix + project_id,
+                        method: 'DELETE'
+                    });
                 }
             }
         }

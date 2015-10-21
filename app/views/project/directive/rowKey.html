@@ -2,7 +2,7 @@
   <button ng-show="!isReservedKey()" class="delete" ng-click="deleteRow()"></button>
   <span ng-show="showThis" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
   <label>
-    <input ng-show="!showThis" type="text" ng-model="inputText" ng-blur="blur()"/>
+    <input ng-show="!showThis" type="text" ng-model="inputText" />
   </label>
   <button ng-show="!showThis" ng-click="saveKey()" type="button" class="apply"></button>
 </div>

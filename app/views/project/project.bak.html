@@ -1,0 +1,133 @@
+
+<!--
+ 备份，另一种实现方式
+ 这个project页面 没有使用指令的形式
+ 在directives.js.bak 里 是其对应的指令
+-->
+
+<ul id="toolbar" class="row">
+  <li><button class="col-md-2 save" ng-click="pidCtrl.saveTable()">Save Service</button></li>
+  <li><button class="col-md-2 add" ng-click="pidCtrl.newTableRow()">Add Field</button></li>
+  <li><button class="col-md-2 delete" ng-click="pidCtrl.deleteTable()">Delete Service</button></li>
+</ul>
+
+<div>
+  <table id="table" class="table table-hover">
+    <thead>
+      <tr class="row">
+        <th class="col-md-4">key</th>
+        <th class="col-md-4">value</th>
+      </tr>
+    </thead>
+    <tbody ng-repeat="(key, row) in pidCtrl.project">
+      <tr class="row">
+        <th>
+          <div class="input-group input-group-customstyle">
+            <button class="delete" ng-show="!pidCtrl.isReservedKey(key)" ng-click="pidCtrl.deleteRow(key)"></button>
+            <span ng-show="row.showKey" title="双击编辑" ng-dblclick="pidCtrl.transKeyState(key)">{{key}}</span>
+            <label>
+              <input id="key_{{key}}" type="text" ng-show="!row.showKey" ng-model="row.keyInput"/>
+            </label>
+            <button class="apply" ng-show="!row.showKey" ng-click="pidCtrl.saveKey(key)"></button>
+          </div>
+        </th>
+
+        <td>
+          <div class="input-group input-group-customstyle">
+            <span ng-show="row.showValue" title="双击编辑" ng-dblclick="pidCtrl.transValueState(key)">{{row.value}}</span>
+            <label>
+              <input id="value_{{key}}" type="text" ng-model="row.value" ng-show="!row.showValue"/>
+            </label>
+            <button class="apply" ng-show="!row.showValue" ng-click="pidCtrl.transValueState(key)"></button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<code> <!-- 对应的 controller -->
+.controller('ProjectIdCtrl2', ['$routeParams', '$timeout','ProjectService',
+    function($routeParams, $timeout, ProjectService) {
+        var self = this;
+        self.pid = $routeParams.project_id;
+        ProjectService.get(self.pid).success(function(data){
+            var _data = angular.fromJson(data);
+            delete _data['_id'];
+
+            self.project = {};
+            angular.forEach(_data, function(value, key) {
+                self.project[key] = {
+                    //key: key,
+                    keyInput: key,
+                    value: value,
+                    showKey: true,
+                    showValue: true
+                }
+            });
+        });
+        self.isReservedKey = function(key){
+            return ('_id' == key ||
+            '_rev' == key ||
+            'services' == key ||
+            'type' == key)
+        };
+        self.deleteRow = function(key) {
+            //self.project.splice(index, 1);
+            delete self.project[key]
+        };
+        self.transKeyState = function(key) {
+            var row = self.project[key];
+            var rowInput = angular.element('#'+ key);
+            if(key !== '_rev' &&
+                key !== 'type' &&
+                key !== 'services')
+            {
+                row.showKey = !row.showKey;
+
+            }
+        };
+        self.transValueState = function(key) {
+            var row = self.project[key];
+            var rowInput = angular.element('#'+ key);
+            if(key !== '_rev' && key !== 'type')
+            {
+                row.showValue = !row.showValue;
+                // input 显示出来有延迟
+                if(!row.showValue) {
+                    $timeout(function(){
+                        //rowInput.trigger('focus');
+                        rowInput.focus();
+                        rowInput.select();
+                    }, 100);
+                }
+            }
+        };
+        self.saveKey = function(key) {
+            var thisRow = self.project[key];
+            thisRow.showKey = !thisRow.showKey;
+            if(thisRow.keyInput === key) {return}
+            if(self.isReservedKey(thisRow.keyInput)) {
+                alert('can not use this name');
+                thisRow.keyInput = key;
+                return
+            }
+
+            if(self.project.hasOwnProperty(thisRow.keyInput)) {
+                // already in project
+                alert('already in project');
+                thisRow.keyInput = key;
+                return
+            }
+            // do save
+            delete self.project[key];
+            self.project[thisRow.keyInput] = {
+                keyInput: thisRow.keyInput,
+                value: thisRow.value,
+                showKey: true,
+                showValue: true
+            };
+        };
+
+    }]);
+</code>
