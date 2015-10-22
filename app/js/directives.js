@@ -163,8 +163,10 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('projectTableValue',['$timeout', function($timeout){
+    .directive('projectTableValue',['$compile', '$timeout', 'ServiceService', function($compile, $timeout, ServiceService){
         return {
+            //priority: 1000,  // 指令内部 加入了 ng-click 所以指令需要先被编译
+            //terminal: true, // 忽略指令内部的其他指令,后面通过调用 $compile去编译他们
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowValue.html',
             scope: {
@@ -174,50 +176,106 @@ angular.module('cmdb')
                 modifyRowValue: '&'
             },
             replace: true,
-            controller: function($scope, $element) {
-                if('services' === $scope.bindKey) {
-                    $scope.services = angular.fromJson($scope.bindValue);
-                    var html = '';
-                    var b = $element.find('b');
-                    angular.forEach($scope.services, function(service) {
-                        html += '<a href="service/'+ service + '">' + service + '</a>'
-                    });
-                    b.html(html);
-                }
-                //console.log('controller');
-        },
-            compile: function(element, attrs, transclude) {
-                return {
-                    pre: function() {
-                        var b = element.find('b');
-                        console.log(b);
-
-
-                    }
-                }
+            controller: function($scope) {
+                ServiceService.list().success(function(data){
+                    $scope.servicesPool = angular.fromJson(data);
+                });
             },
+            //    if('services' === $scope.bindKey) {
+            //        $scope.services = angular.fromJson($scope.bindValue);
+            //        var html = '';
+            //        var b = $element.find('b');
+            //        angular.forEach($scope.services, function(service) {
+            //            html += '<a href="service/'+ service + '">' + service + '</a>'
+            //        });
+            //
+            //        b.html(html);
+            //    }
+            //},
+            //compile: function(element, attrs, transclude) {
+            //    var b = element.find('b');
+            //    return {
+            //        pre: function(scope, iElement, iAttrs, controller) {},
+            //        post: function(scope, iElement, iAttrs, controller) {}
+            //    }
+            //},
             link: function(scope, element, attr){
                 var input = element.find('input');
-                //var b = element.find('b');
+                var b = element.find('b');
                 scope.showThis = true;
 
+
                 if('services' === scope.bindKey) {
+                    // services 是当前项目添加的服务
                     scope.services = angular.fromJson(scope.bindValue);
                     scope.inputText = '';
-                    var html = '';
-                    angular.forEach(scope.services, function(service) {
-                        html += '<a href="service/'+ service + '">' + service + '</a>'
-                    });
-                    b.html(html);
+                    //var html = '';
+                    //angular.forEach(scope.services, function(service, i) {
+                    //    html += '<a href="service/{0}">{0}</a><a href ng-click="delService(i)">x</a>'.format(service);
+                    //});
+                    ////b.html(html);
+                    //$compile(html)(scope, function(cloned, scpoe) {
+                    //    // 避免ng-click re-compiled
+                    //    b.append(cloned);
+                    //});
+
+                    // 监视 input的 变化
                     scope.$watch(function() {return scope.inputText}, function(newValue, oldValue) {
-                        if(newValue) {console.log(newValue, oldValue);}
+                        if(newValue) {
+                            console.log(newValue, oldValue);
+                            scope.match = []; // 下拉菜单
+                            angular.forEach(scope.servicesPool, function(service) {
+                                if (service.indexOf(newValue) >= 0) {
+                                    scope.match.push(service);
+                                }
+                            });
+                            if(0 != scope.match.length) {scope.matched = true;}
+
+                        } else {
+                            scope.match = [];
+                            scope.matched = false;
+                        }
                     });
+
+
                 } else {
+                    // 不是 services 的 key
                     scope.inputText = scope.bindValue;
                 }
+                scope.saveService = function(service) {
+                    // scope.services
+                    if(scope.services.indexOf(service) == -1) {
+                        scope.services.push(service);
+                        scope.modifyRowValue({
+                            key: scope.bindKey,
+                            value: scope.services
+                        })();
+                    }
+                    scope.inputText = '';
+                };
+                scope.delService  = function(i) {
+                    scope.services.splice(i, 1);
+                    scope.modifyRowValue({
+                        key: scope.bindKey,
+                        value: scope.services
+                    })();
+                };
+                scope.transServiceEditState = function() {
+                    scope.showThis = !scope.showThis;
+                    scope.inputText = '';
+                };
 
+                // services 不显示对号按钮
+                scope.showButton = function() {
+                    if('services' === scope.bindKey) {
+                        return false;
+                    } else {
+                        return !scope.showThis;
+                    }
+                };
+
+                // services 不显示 span
                 scope.show = function () {
-                    // services not show
                     if('services' === scope.bindKey) {
                         return false;
                     } else {
@@ -225,11 +283,6 @@ angular.module('cmdb')
                     }
                 };
 
-                scope.transServiceEditState = function() {
-                    //b.empty();
-                    scope.showThis = !scope.showThis;
-
-                };
 
                 scope.transEditState = function() {
                     // 不能编辑的 value

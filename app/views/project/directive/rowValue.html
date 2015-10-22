@@ -1,10 +1,19 @@
 <div class="input-group input-group-customstyle">
-  <button ng-show="bindKey == 'services'" ng-click="transServiceEditState()">e</button>
-  <b>
+  <button ng-show="bindKey == 'services'" ng-click="transServiceEditState()">edit</button>
+  <b ng-repeat="service in services track by $index">
+    <span>{{service}}</span><a href ng-click="delService($index)">x</a>
   </b>
+
   <span ng-show="show()" class="col-md-4" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
   <label>
     <input ng-show="!showThis" type="text" ng-model="inputText" />
   </label>
-  <button ng-show="!showThis" ng-click="saveValue()" class="apply"></button>
+  <span uib-dropdown uib-keyboard-nav is-open="matched">
+  <ul class="uib-dropdown-menu" uib-dropdown-toggle>
+    <li ng-repeat="service in match">
+      <a  ng-click="saveService(service)" href>{{service}}</a>
+    </li>
+  </ul>
+  </span>
+  <button ng-show="showButton()" ng-click="saveValue()" class="apply"></button>
 </div>

@@ -15,6 +15,14 @@ if (typeof String.prototype.endsWith != 'function') {
     };
 }
 
+if (typeof String.prototype.format != 'function') {
+    String.prototype.format = function(){
+        var args = arguments;
+        return this.replace(/{(\d+)}/g, function(m, i){
+            return typeof args[i] != 'undefined' ? args[i] : m;
+        });
+    }
+}
 angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
     // 定义api前缀常量
     .constant('cmdbApiPrefix', '/api/v1/')
@@ -25,9 +33,22 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
             $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|tel):/);
             $routeProvider
                 .when('/', {
-                    templateUrl: 'views/main.html'
+                    templateUrl: 'views/main.html',
+                    controller: 'MainCtrl',
+                    controllerAs: 'mCtrl',
+                    resolve: {
+                        services: ['ServiceService', function(ServiceService){
+                            return ServiceService.list().then(function(resp){
+                                return angular.fromJson(resp.data);
+                            });
+                        }],
+                        projects: ['ProjectService', function(ProjectService){
+                            return ProjectService.list().then(function(resp){
+                                return angular.fromJson(resp.data);
+                            })
+                        }]
                     }
-                )
+                })
                 .when('/service', {
                     templateUrl: 'views/service/listService.html',
                     controller: 'ServiceCtrl',

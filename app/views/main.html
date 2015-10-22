@@ -1,13 +1,27 @@
+<div class="row">
 
+<div class="col-md-12">
+  <a href="service">list service</a>
+</div>
+<div class="col-md-12">
+  <a href="service/add">add service</a>
+</div>
 <div class="col-md-12">
    <a href="project">list project</a>
 </div>
 <div class="col-md-12">
     <a href="project/add">add project</a>
 </div>
-<div class="col-md-12">
-    <a href="service">list service</a>
-</div>
-<div class="col-md-12">
-    <a href="service/add">add service</a>
+
+
+  <div class="input-group col-md-4">
+    <input type="text" class="form-control" placeholder="Search" ng-model="mCtrl.inputText">
+    <div class="input-group-btn">
+      <button class="btn btn-default" type="submit" ng-click="mCtrl.search()"><i class="glyphicon glyphicon-search"></i></button>
+    </div>
+  </div>
+
+  <div ng-repeat="item in mCtrl.data">
+    <a href="{{mCtrl.type}}/{{item}}">{{item}}</a>
+  </div>
 </div>
