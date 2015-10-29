@@ -22,7 +22,8 @@
         </project-table-key>
       </th>
       <td>
-        <project-table-value  bind-key="key"
+        <project-table-value  current-db="pidCtrl.database"
+                              bind-key="key"
                               bind-value="data.v"
                               modify-row-value="pidCtrl.modifyRowValue(key, value)"
                               push-alert="pidCtrl.pushAlert(msg)">

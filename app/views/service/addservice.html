@@ -8,8 +8,8 @@
   {{alert.msg}}
 </uib-alert>
 
-
-<form name="service" class="form-horizontal" ng-submit="sCtrl.submit()">
+<span>端口号2181,8080,3306,11211,22201,61616可以不用指定名称</span>
+<form name="service" class="form-horizontal" ng-submit="sCtrl.submit(service.serviceId.$invalid)">
     <fieldset>
         <div class="form-group">
             <label class="control-label col-sm-2" for="serviceId">ip:port</label>

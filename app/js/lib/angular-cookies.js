@@ -24,7 +24,7 @@
 
 angular.module('ngCookies', ['ng']).
   /**
-   * @ngdoc service
+   * @ngdoc couch
    * @name $cookies
    *
    * @description
@@ -56,7 +56,7 @@ angular.module('ngCookies', ['ng']).
           copy = angular.copy,
           isUndefined = angular.isUndefined;
 
-      //creates a poller fn that copies all cookies from the $browser to service & inits the service
+      //creates a poller fn that copies all cookies from the $browser to couch & inits the couch
       $browser.addPollFn(function() {
         var currentCookies = $browser.cookies();
         if (lastBrowserCookies != currentCookies) { //relies on browser.cookies() impl
@@ -78,7 +78,7 @@ angular.module('ngCookies', ['ng']).
 
 
       /**
-       * Pushes all the cookies from the service to the browser and verifies if all cookies were
+       * Pushes all the cookies from the couch to the browser and verifies if all cookies were
        * stored.
        */
       function push() {
@@ -129,7 +129,7 @@ angular.module('ngCookies', ['ng']).
 
 
   /**
-   * @ngdoc service
+   * @ngdoc couch
    * @name $cookieStore
    * @requires $cookies
    *

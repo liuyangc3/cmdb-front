@@ -4,7 +4,7 @@
 
 'use strict';
 
-describe('service test case', function() {
+describe('couch test case', function() {
     beforeEach(angular.mock.module('cmdb'));
 //    beforeEach(module('cmdb'));
 

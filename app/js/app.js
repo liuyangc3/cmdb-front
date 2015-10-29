@@ -25,7 +25,10 @@ if (typeof String.prototype.format != 'function') {
 }
 angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
     // 定义api前缀常量
-    .constant('cmdbApiPrefix', '/api/v1/')
+    .constant('cmdbApiPrefix', '/api/v1')
+
+    //当前环境(dev,test,prod)数据库名
+    .value('currentDB', 'cmdb')
 
     .config(['$compileProvider', '$routeProvider', '$locationProvider',
         function($compileProvider, $routeProvider, $locationProvider) {
@@ -37,43 +40,43 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                     controller: 'MainCtrl',
                     controllerAs: 'mCtrl',
                     resolve: {
-                        services: ['ServiceService', function(ServiceService){
-                            return ServiceService.list().then(function(resp){
+                        services: ['$route', 'HTTPService', 'currentDB', function($route, HTTPService, currentDB){
+                            return HTTPService.list(currentDB, 'service').then(function(resp){
                                 return angular.fromJson(resp.data);
                             });
                         }],
-                        projects: ['ProjectService', function(ProjectService){
-                            return ProjectService.list().then(function(resp){
+                        projects: ['$route', 'HTTPService', 'currentDB', function($route, HTTPService, currentDB){
+                            return HTTPService.list(currentDB, 'project').then(function(resp){
                                 return angular.fromJson(resp.data);
                             })
                         }]
                     }
                 })
-                .when('/service', {
+                .when('/:database/service', {
                     templateUrl: 'views/service/listService.html',
                     controller: 'ServiceCtrl',
                     controllerAs: 'sCtrl',
                     resolve: {
-                        services: ['ServiceService', function(ServiceService){
-                            return ServiceService.list().then(function(resp){
+                        services: ['$route', 'HTTPService', function($route, HTTPService){
+                            return HTTPService.list($route.current.params.database, 'service').then(function(resp){
                                 return angular.fromJson(resp.data);
                             });
                         }]
                     }
                 })
-                .when('/service/add', {
+                .when('/:database/service/add', {
                     templateUrl: 'views/service/addservice.html',
                     controller: 'ServiceAddCtrl',
                     controllerAs: 'sCtrl'
                 })
-                .when('/service/:service_id', {
+                .when('/:database/service/:service_id', {
                     templateUrl: 'views/service/service.html',
                     controller: 'ServiceIdCtrl',
                     controllerAs: 'sidCtrl',
                     resolve: {
-                        rawData: ['$route', 'dataTransService', 'ServiceService',
-                            function($route, dataTransService, ServiceService) {
-                                return ServiceService.get($route.current.params.service_id)
+                        service: ['$route', 'dataTransService', 'HTTPService',
+                            function($route, dataTransService, HTTPService) {
+                                return HTTPService.get($route.current.params.database, 'service', $route.current.params.service_id)
                                     .then(function(resp){
                                         return dataTransService.init(
                                             dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
@@ -82,38 +85,38 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                             }]
                     }
                 })
-                .when('/project', {
+                .when('/:database/project', {
                     templateUrl: 'views/project/listProject.html',
                     controller: 'ProjectCtrl',
                     controllerAs: 'pCtrl',
                     resolve: {
-                        projects: ['ProjectService', function(ProjectService){
-                            return ProjectService.list().then(function(resp){
+                        projects: ['$route', 'HTTPService', function($route, HTTPService){
+                            return HTTPService.list($route.current.params.database, 'project').then(function(resp){
                                 return angular.fromJson(resp.data);
                             })
                         }]
                     }
                 })
-                .when('/project/add', {
+                .when('/:database/project/add', {
                     templateUrl: 'views/project/addProject.html',
                     controller: 'ProjectAddCtrl',
                     controllerAs: 'pCtrl',
                     resolve: {
-                        services: ['ServiceService', function (ServiceService) {
-                            return ServiceService.list().then(function (resp) {
+                        services: ['$route', 'HTTPService', function ($route, HTTPService) {
+                            return HTTPService.list($route.current.params.database, 'service').then(function (resp) {
                                 return angular.fromJson(resp.data);
                             });
                         }]
                     }
                 })
-                .when('/project/:project_id', {
+                .when('/:database/project/:project_id', {
                     templateUrl: 'views/project/project.html',
                     controller: 'ProjectIdCtrl',
                     controllerAs: 'pidCtrl',
                     resolve: {
-                        rawData: ['$route', 'dataTransService', 'ProjectService',
-                            function($route, dataTransService, ProjectService) {
-                            return ProjectService.get($route.current.params.project_id)
+                        project: ['$route', 'dataTransService', 'HTTPService',
+                            function($route, dataTransService, HTTPService) {
+                            return HTTPService.get($route.current.params.database, 'project', $route.current.params.project_id)
                                 .then(function(resp) {
                                     return dataTransService.init(
                                         dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])

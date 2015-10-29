@@ -75,7 +75,6 @@ angular.module('cmdb')
             replace: true,
             link: function(scope, element, attr){
                 var input = element.find('input');
-                console.log(attr);
                 scope.showThis = true;
                 //scope.$watch(attr.showThis, function(v){
                 //    console.log(v);
@@ -163,35 +162,20 @@ angular.module('cmdb')
             }
         }}])
 
-    .directive('projectTableValue',['$compile', '$timeout', 'ServiceService', function($compile, $timeout, ServiceService){
+    .directive('projectTableValue',['$compile', '$timeout', 'HTTPService', function($compile, $timeout, HTTPService){
         return {
             //priority: 1000,  // 指令内部 加入了 ng-click 所以指令需要先被编译
             //terminal: true, // 忽略指令内部的其他指令,后面通过调用 $compile去编译他们
             restrict: 'AE',
             templateUrl: 'views/project/directive/rowValue.html',
             scope: {
+                currentDb: '=',
                 bindKey: '=',
                 bindValue: '=',
                 pushAlert: '&',
                 modifyRowValue: '&'
             },
             replace: true,
-            controller: function($scope) {
-                ServiceService.list().success(function(data){
-                    $scope.servicesPool = angular.fromJson(data);
-                });
-            },
-            //    if('services' === $scope.bindKey) {
-            //        $scope.services = angular.fromJson($scope.bindValue);
-            //        var html = '';
-            //        var b = $element.find('b');
-            //        angular.forEach($scope.services, function(service) {
-            //            html += '<a href="service/'+ service + '">' + service + '</a>'
-            //        });
-            //
-            //        b.html(html);
-            //    }
-            //},
             //compile: function(element, attrs, transclude) {
             //    var b = element.find('b');
             //    return {
@@ -209,6 +193,12 @@ angular.module('cmdb')
                     // services 是当前项目添加的服务
                     scope.services = angular.fromJson(scope.bindValue);
                     scope.inputText = '';
+                    // 获取所有的services
+                    HTTPService.list(scope.currentDb, 'service').success(function(data){
+                        scope.servicesPool = angular.fromJson(data);
+
+                    }).error(function(error){console.log(error);});
+
                     //var html = '';
                     //angular.forEach(scope.services, function(service, i) {
                     //    html += '<a href="service/{0}">{0}</a><a href ng-click="delService(i)">x</a>'.format(service);
@@ -222,7 +212,6 @@ angular.module('cmdb')
                     // 监视 input的 变化
                     scope.$watch(function() {return scope.inputText}, function(newValue, oldValue) {
                         if(newValue) {
-                            console.log(newValue, oldValue);
                             scope.match = []; // 下拉菜单
                             angular.forEach(scope.servicesPool, function(service) {
                                 if (service.indexOf(newValue) >= 0) {

@@ -10,7 +10,7 @@
       <tbody>
         <tr ng-repeat="service_id in sCtrl.services">
           <td>
-            <a href="service/{{service_id}}">{{service_id}}</a>
+            <a href="{{sCtrl.database}}/service/{{service_id}}">{{service_id}}</a>
           </td>
         </tr>
       </tbody>

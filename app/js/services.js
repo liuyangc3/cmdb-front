@@ -42,9 +42,8 @@ angular.module('cmdb')
             }
         }
     })
-    .factory('ServiceService', ['$http', 'cmdbApiPrefix',
+    .factory('HTTPService', ['$http', 'cmdbApiPrefix',
     function($http, cmdbApiPrefix) {
-        var serviceApiPrefix = cmdbApiPrefix + 'service/';
         return {
             // 在 angular v13 中
             // $http.get() 可以直接返回 promise
@@ -53,34 +52,34 @@ angular.module('cmdb')
             //
             // v12 需要这样处理:
             // var deferred = $q.defer();
-            // $http.get(_utils.join('service/list'))
+            // $http.get(_utils.join('couch/list'))
             //   .success(function (data) {deferred.resolve(data)})
             //   .error(function(error){deferred.reject(error)});
             // return deferred.promise;
 
-            list: function () {
-                return $http.get(serviceApiPrefix + 'list')
+            list: function (database, type) {
+                return $http.get('{0}/{1}/{2}/list'.format(cmdbApiPrefix, database, type))
             },
-            get: function (service_id) {
-                return $http.get(serviceApiPrefix + service_id)
+            get: function (database, type, doc_id) {
+                return $http.get('{0}/{1}/{2}/{3}'.format(cmdbApiPrefix, database, type, doc_id))
             },
-            post: function (service_id, formData) {
+            post: function (database, type, doc_id, formData) {
                 return $http({
-                    url: serviceApiPrefix + service_id,
+                    url: '{0}/{1}/{2}/{3}'.format(cmdbApiPrefix, database, type, doc_id),
                     method: 'POST',
                     data: formData
                 })
             },
-            put: function (service_id, formData) {
+            put: function (database, type, doc_id, formData) {
                 return $http({
-                    url: serviceApiPrefix + service_id,
+                    url: '{0}/{1}/{2}/{3}'.format(cmdbApiPrefix, database, type, doc_id),
                     method: 'PUT',
                     data: formData
                 })
             },
-            del: function (service_id) {
+            del: function (database, type, doc_id) {
                 return $http({
-                    url: serviceApiPrefix + service_id,
+                    url: '{0}/{1}/{2}/{3}'.format(cmdbApiPrefix, database, type, doc_id),
                     method: 'DELETE'
                 });
             }
@@ -89,31 +88,30 @@ angular.module('cmdb')
 
     .factory('ProjectService',['$http','cmdbApiPrefix',
         function($http, cmdbApiPrefix){
-            var projectApiPrefix = cmdbApiPrefix + 'project/';
             return {
-                list: function() {
-                    return $http.get(projectApiPrefix + 'list');
+                list: function(database) {
+                    return $http.get('{0}/{1}/project/list'.format(cmdbApiPrefix, database));
                 },
-                get: function(project_id) {
-                    return $http.get(projectApiPrefix + project_id);
+                get: function(database, project_id) {
+                    return $http.get('{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id));
                 },
-                post: function(project_id, formData) {
+                post: function(database, project_id, formData) {
                     return $http({
-                        url: projectApiPrefix + project_id,
+                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
                         method: 'POST',
                         data: formData
                     });
                 },
-                put: function(project_id, formData) {
+                put: function(database, project_id, formData) {
                     return $http({
-                        url: projectApiPrefix + project_id,
+                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
                         method: 'PUT',
                         data: formData
                     });
                 },
-                del: function (project_id) {
+                del: function (database, project_id) {
                     return $http({
-                        url: projectApiPrefix + project_id,
+                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
                         method: 'DELETE'
                     });
                 }

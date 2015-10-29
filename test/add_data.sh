@@ -1,5 +1,5 @@
 #!/bin/sh
-# add service
+# add couch
 curl -X POST http://localhost:8005/api/v1/service/1.1.1.1:8080
 curl -X POST http://localhost:8005/api/v1/service/2.2.2.2:8080
 curl -X POST http://localhost:8005/api/v1/service/3.3.3.3:11211
