@@ -23,12 +23,25 @@ if (typeof String.prototype.format != 'function') {
         });
     }
 }
-angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
+var latestId = 0;
+
+angular.module('cmdb', ['ngRoute', 'ngSanitize', 'ui.select', 'ui.bootstrap'])
     // 定义api前缀常量
     .constant('cmdbApiPrefix', '/api/v1')
 
-    //当前环境(dev,test,prod)数据库名
-    .value('currentDB', 'cmdb')
+    // ui select config
+    .constant('uiSelectConfig', {
+        theme: 'bootstrap',
+        searchEnabled: true,
+        sortable: false,
+        placeholder: '', // Empty by default, like HTML tag <select>
+        refreshDelay: 1000, // In milliseconds
+        closeOnSelect: true,
+        generateId: function() {
+            return latestId++;
+        },
+        appendToBody: false
+    })
 
     .config(['$compileProvider', '$routeProvider', '$locationProvider',
         function($compileProvider, $routeProvider, $locationProvider) {
@@ -40,18 +53,50 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
                     controller: 'MainCtrl',
                     controllerAs: 'mCtrl',
                     resolve: {
-                        services: ['$route', 'HTTPService', 'currentDB', function($route, HTTPService, currentDB){
-                            return HTTPService.list(currentDB, 'service').then(function(resp){
+                        databases: ['$http', 'cmdbApiPrefix', function($http, cmdbApiPrefix) {
+                            return $http.get(cmdbApiPrefix + '/database/list').then(function(resp) {
                                 return angular.fromJson(resp.data);
                             });
                         }],
-                        projects: ['$route', 'HTTPService', 'currentDB', function($route, HTTPService, currentDB){
-                            return HTTPService.list(currentDB, 'project').then(function(resp){
+                        services: ['$route', 'HTTPService', 'globalService', function($route, HTTPService, globalService){
+                            return HTTPService.list(globalService.currentDB, 'service').then(function(resp){
+                                return angular.fromJson(resp.data);
+                            });
+                        }],
+                        projects: ['$route', 'HTTPService', 'globalService', function($route, HTTPService, globalService){
+                            return HTTPService.list(globalService.currentDB, 'project').then(function(resp){
                                 return angular.fromJson(resp.data);
                             })
                         }]
                     }
                 })
+
+                .when('/addDatabase', {
+                    templateUrl: 'views/database/addDatabase.html',
+                    controller: 'DatabaseCtrl',
+                    controllerAs: 'dbCtrl',
+                    resolve: {
+                        databases: ['$http', 'cmdbApiPrefix', function ($http, cmdbApiPrefix) {
+                            return $http.get(cmdbApiPrefix + '/database/list').then(function (resp) {
+                                return angular.fromJson(resp.data);
+                            });
+                        }]
+                    }
+                })
+
+                .when('/delDatabase', {
+                    templateUrl: 'views/database/delDatabase.html',
+                    controller: 'DatabaseCtrl',
+                    controllerAs: 'dbCtrl',
+                    resolve: {
+                        databases: ['$http', 'cmdbApiPrefix', function ($http, cmdbApiPrefix) {
+                            return $http.get(cmdbApiPrefix + '/database/list').then(function (resp) {
+                                return angular.fromJson(resp.data);
+                            });
+                        }]
+                    }
+                })
+
                 .when('/:database/service', {
                     templateUrl: 'views/service/listService.html',
                     controller: 'ServiceCtrl',
@@ -140,3 +185,36 @@ angular.module('cmdb', ['ngRoute', 'ui.bootstrap'])
             //$locationProvider.html5Mode(false).hashPrefix('!');
             $locationProvider.html5Mode(true);
         }]);
+
+//angular.module('cmdb')
+//    .filter('propsFilter', function() {
+//    return function(items, props) {
+//        var out = [];
+//
+//        if (angular.isArray(items)) {
+//            var keys = Object.keys(props);
+//
+//            items.forEach(function(item) {
+//                var itemMatches = false;
+//
+//                for (var i = 0; i < keys.length; i++) {
+//                    var prop = keys[i];
+//                    var text = props[prop].toLowerCase();
+//                    if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+//                        itemMatches = true;
+//                        break;
+//                    }
+//                }
+//
+//                if (itemMatches) {
+//                    out.push(item);
+//                }
+//            });
+//        } else {
+//            // Let the output be the input untouched
+//            out = items;
+//        }
+//
+//        return out;
+//    };
+//});

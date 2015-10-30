@@ -1,19 +1,4 @@
 <div class="row">
-
-<div class="col-md-12">
-  <a href="{{mCtrl.database}}/service">list service</a>
-</div>
-<div class="col-md-12">
-  <a href="{{mCtrl.database}}/service/add">add service</a>
-</div>
-<div class="col-md-12">
-   <a href="{{mCtrl.database}}/project">list project</a>
-</div>
-<div class="col-md-12">
-    <a href="{{mCtrl.database}}/project/add">add project</a>
-</div>
-
-
   <div class="input-group col-md-4">
     <input type="text" class="form-control" placeholder="Search" ng-model="mCtrl.inputText">
     <div class="input-group-btn">
@@ -23,5 +8,27 @@
 
   <div ng-repeat="item in mCtrl.data">
     <a href="{{mCtrl.type}}/{{item}}">{{item}}</a>
+  </div>
+
+
+  <span>当前环境</span>
+  <ui-select ng-model="mCtrl.database" style="min-width: 150px;">
+    <ui-select-match placeholder="选择环境">{{mCtrl.database}}</ui-select-match>
+    <ui-select-choices repeat="database in mCtrl.databases">
+      <div ng-bind-html="database"></div>
+    </ui-select-choices>
+  </ui-select>
+
+  <div class="col-md-12">
+    <a href="{{mCtrl.database}}/service">list service</a>
+  </div>
+  <div class="col-md-12">
+    <a href="{{mCtrl.database}}/service/add">add service</a>
+  </div>
+  <div class="col-md-12">
+     <a href="{{mCtrl.database}}/project">list project</a>
+  </div>
+  <div class="col-md-12">
+      <a href="{{mCtrl.database}}/project/add">add project</a>
   </div>
 </div>

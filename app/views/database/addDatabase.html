@@ -1,0 +1,38 @@
+
+<script type="text/ng-template" id="alert.html">
+  <div class="alert" style="background-color:#fa39c3;color:white" role="alert">
+    <div ng-transclude></div>
+  </div>
+</script>
+
+<uib-alert ng-repeat="alert in dbCtrl.alerts" type="{{alert.type}}" close="dbCtrl.closeAlert($index)">
+  {{alert.msg}}
+</uib-alert>
+
+<form name="database" class="form-horizontal" ng-submit="dbCtrl.addDatabase(database.name.$invalid)">
+  <fieldset>
+    <div class="form-group">
+      <label class="control-label col-sm-2" for="name">name</label>
+      <div class="controls col-sm-4">
+        <input type="text"
+               class="form-control"
+               id="name"
+               name="name"
+               tabindex="1"
+               placeholder="环境名称"
+               ng-model="dbCtrl.database"
+               ng-pattern="/^[a-z][a-zA-Z0-9-_]+/"
+               required
+               autofocus>
+        <span class="col-sm-4"
+              ng-show="!database.name.$error.required && database.name.$invalid">格式错误</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="control-label col-sm-2"></label>
+      <div class="col-sm-4">
+        <button type="submit" class="btn btn-primary" tabindex="3">Submit</button>
+      </div>
+    </div>
+  </fieldset>
+</form>

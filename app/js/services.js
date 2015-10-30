@@ -15,6 +15,12 @@ angular.module('cmdb')
         }
     }])
 
+    .factory('globalService', function() {
+        return {
+           currentDB: 'cmdb'
+        }
+    })
+
     .factory('dataTransService', function(){
         // 数据格式转化，用于页面展示
         // {key: value} --> {key: {v: value}}
