@@ -25,7 +25,15 @@
   <script src="js/directives.js"></script>
 </head>
 <body ng-app="cmdb">
-<div class="page-container">
+<div class="page-container" ng-view>
+  <nav class="navbar">
+    <div class="container">
+      <div class="navbar-header">
+        <span>当前环境<a href="#">CMDB</a></span>
+      </div>
+    </div>
+  </nav>
+
   <div class="container">
     <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
       <ul class="nav">
