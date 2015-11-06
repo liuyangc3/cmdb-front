@@ -14,7 +14,7 @@ angular.module('cmdb')
     }])
 
     .controller('DatabaseCtrl', ['$scope', '$http', '$state', 'globalService', 'cmdbApiPrefix',
-        function($scope, $http, $route, globalService, cmdbApiPrefix) {
+        function($scope, $http, $state, globalService, cmdbApiPrefix) {
             var self = this;
             self.alerts = [];
             self.closeAlert = function(index){
