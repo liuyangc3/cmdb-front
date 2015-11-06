@@ -29,7 +29,7 @@ angular.module('cmdb')
                 }
                 $http.post(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
-                    $state.go('^', {}, {reload: true});
+                    $state.go('root', {}, {reload: true});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });
@@ -37,7 +37,7 @@ angular.module('cmdb')
             self.delDatabase = function() {
                 $http.delete(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
-                    $state.go('^', {}, {reload: true});
+                    $state.go('root', {}, {reload: true});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });

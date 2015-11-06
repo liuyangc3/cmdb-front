@@ -73,7 +73,7 @@ angular.module('cmdb', [
             // 全局 state
             .state('root', {
                 url: '',
-                abstract: true,
+                //abstract: true,
                 views: {
                     'header': {
                         templateUrl: 'views/header.html',
