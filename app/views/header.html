@@ -1,0 +1,29 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+          <a href="#">当前环境</a>
+        </li>
+        <li>
+          <ui-select ng-model="wrapperObj.database" style="min-width: 150px;">
+            <ui-select-match placeholder="选择环境">
+              <span ng-bind-html="$select.selected"></span>
+            </ui-select-match>
+            <ui-select-choices repeat="database in wrapperObj.databases">
+              <div ng-bind-html="database"></div>
+            </ui-select-choices>
+          </ui-select>
+        </li>
+      </ul>
+
+      <div class="nav navbar-nav navbar-right input-group col-md-4">
+        <input type="text" class="form-control" placeholder="Search" ng-model="mCtrl.inputText">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit" ng-click="mCtrl.search()"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</nav>

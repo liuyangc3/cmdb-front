@@ -1,8 +1,11 @@
-<ui-select ng-model="dbCtrl.database" theme="bootstrap" style="min-width: 150px;">
-  <ui-select-match placeholder="选择环境">{{dbCtrl.database}}</ui-select-match>
-  <ui-select-choices repeat="database in dbCtrl.databases | filter: $select.search">
+<ui-select ng-model="dbCtrl.wrapperObj.database" theme="bootstrap" style="min-width: 150px;">
+  <ui-select-match placeholder="选择环境">
+    <span ng-bind-html="$select.selected"></span>
+  </ui-select-match>
+  <ui-select-choices repeat="database in dbCtrl.wrapperObj.databases | filter: $select.search">
     <div ng-bind-html="database | highlight: $select.search"></div>
   </ui-select-choices>
 </ui-select>
 
 <button ng-click="dbCtrl.delDatabase()" type="submit" class="btn btn-primary" tabindex="3">Submit</button>
+{{dbCtrl.wrapperObj.databases}}

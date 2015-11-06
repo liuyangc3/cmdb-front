@@ -3,56 +3,40 @@
  */
 'use strict';
 angular.module('cmdb')
-    .controller('MainCtrl', ['$scope', '$http', 'services', 'projects', 'globalService', 'databases',
-        function($scope, $http, services, projects, globalService, databases) {
+    .controller('MainCtrl', ['$scope', 'globalService',
+        function($scope, globalService) {
             var self = this;
-            self.database = globalService.currentDB;
-            self.databases = databases;
-            self.search = function() {
-                if(self.inputText === '') {
-                    self.data = '';
-                    return
-                }
-                if(self.inputText.match(/\d+/)) {
-                    // list services
-                    self.data = services;
-                    self.type = 'service';
-                } else {
-                    // list projects
-                    self.data = projects;
-                    self.type = 'project';
-                }
-            };
-            $scope.$watch(function(){return self.database},function(newValue, oldValue) {
-                if(newValue) {
-                    globalService.currentDB = newValue;
-                }
+            self.databases = globalService.databases;
+            $scope.$watch(function(){return globalService.currentDB}, function(newValue,o) {
+                // 监视 导航条的数据变化
+                if(newValue) {self.database = newValue}
             });
     }])
 
-    .controller('DatabaseCtrl', ['$scope', '$http', '$route', 'databases', 'cmdbApiPrefix',
-        function($scope, $http, $route, databases, cmdbApiPrefix) {
+    .controller('DatabaseCtrl', ['$scope', '$http', '$state', 'globalService', 'cmdbApiPrefix',
+        function($scope, $http, $route, globalService, cmdbApiPrefix) {
             var self = this;
             self.alerts = [];
             self.closeAlert = function(index){
                 self.alerts.splice(index, 1);
             };
 
-            self.databases = databases;
+            self.wrapperObj = {databases: globalService.databases};
+
             self.addDatabase = function(invalid) {
                 if(invalid) {
                     return false;
                 }
-                $http.post(cmdbApiPrefix + '/database/' + self.database).success(function(data) {
+                $http.post(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });
             };
             self.delDatabase = function() {
-                $http.delete(cmdbApiPrefix + '/database/' + self.database).success(function(data) {
+                $http.delete(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
-                    $route.reload();
+                    $state.go($state.current, {}, {reload: true});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });

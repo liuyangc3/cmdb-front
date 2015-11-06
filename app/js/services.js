@@ -17,7 +17,7 @@ angular.module('cmdb')
 
     .factory('globalService', function() {
         return {
-           currentDB: 'cmdb'
+           currentDB: ''
         }
     })
 

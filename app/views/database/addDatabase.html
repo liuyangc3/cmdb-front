@@ -20,7 +20,7 @@
                name="name"
                tabindex="1"
                placeholder="环境名称"
-               ng-model="dbCtrl.database"
+               ng-model="dbCtrl.wrapperObj.database"
                ng-pattern="/^[a-z][a-zA-Z0-9-_]+/"
                required
                autofocus>
@@ -36,3 +36,5 @@
     </div>
   </fieldset>
 </form>
+
+{{dbCtrl.wrapperObj.database}}
