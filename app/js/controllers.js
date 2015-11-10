@@ -3,13 +3,21 @@
  */
 'use strict';
 angular.module('cmdb')
-    .controller('MainCtrl', ['$scope', 'globalService',
-        function($scope, globalService) {
+    .controller('MainCtrl', ['$scope', '$state', 'globalService', 'HTTPService',
+        function($scope, $state, globalService, HTTPService) {
             var self = this;
             self.databases = globalService.databases;
             $scope.$watch(function(){return globalService.currentDB}, function(newValue,o) {
-                // 监视 导航条的数据变化
-                if(newValue) {self.database = newValue}
+                // 监视导航条 选择环境
+                if(newValue) {
+                    self.database = newValue;
+                    HTTPService.list(newValue, 'service').then(function(resp){
+                        self.services = angular.fromJson(resp.data);
+                    });
+                    HTTPService.list(newValue, 'project').then(function(resp){
+                        self.projects = angular.fromJson(resp.data);
+                    });
+                }
             });
     }])
 
@@ -29,7 +37,7 @@ angular.module('cmdb')
                 }
                 $http.post(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
-                    $state.go('root', {}, {reload: true});
+                    $state.go('root', null, {reload: true});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });
@@ -37,7 +45,7 @@ angular.module('cmdb')
             self.delDatabase = function() {
                 $http.delete(cmdbApiPrefix + '/database/' + self.wrapperObj.database).success(function(data) {
                     self.alerts.push({type: 'success', msg: angular.fromJson(data)});
-                    $state.go('root', {}, {reload: true});
+                    $state.go('root', null, {reload: true});
                 }).error(function(error) {
                     self.alerts.push({type: 'danger', msg: angular.fromJson(error)});
                 });
@@ -45,20 +53,13 @@ angular.module('cmdb')
 
     }])
 
-    .controller('ServiceCtrl', ['$routeParams','$route', 'services',
-        function($routeParams, $route, services){
-            var self = this;
-            self.services = services;
-            self.database = $routeParams.database;
-            self.reload = function(){
-                $route.reload();
-            };
-      }])
+    //////////////////////////
+    // Services Controllers //
+    //////////////////////////
 
-    .controller('ServiceIdCtrl',
-    ['$route', '$routeParams', '$scope', '$location',
-    'service', 'dataTransService', 'TableService', 'HTTPService',
-        function($route, $routeParams, $scope, $location, service, dataTransService, TableService, HTTPService) {
+    .controller('ServiceCtrl',
+    ['$state', '$stateParams', '$state', 'service', 'dataTransService', 'TableService', 'HTTPService',
+        function($state, $stateParams, $scope, service, dataTransService, TableService, HTTPService) {
             var self = this;
             self.alerts = [];
             self.closeAlert = function(index){
@@ -84,8 +85,8 @@ angular.module('cmdb')
                     self.alerts.push({type: 'danger', msg: msg});
                 }
             };
-            self.database = $routeParams.database;
-            self.service_id = $routeParams.service_id;
+            self.database = $stateParams.database;
+            self.sid = $stateParams.sid;
             self.type = 'service';
             self.service = service;
             self.isReservedKey = function(key) {
@@ -124,29 +125,31 @@ angular.module('cmdb')
             };
             self.saveTable = function() {
                 if(!self.modified){return}
-                HTTPService.put(self.database, self.type, self.service_id, dataTransService.revert(self.service))
-                .success(function(data) {
-                    $route.reload();
-                }).error(function(error){
-                    self.alerts.push({type: 'danger', msg: error});
-                });
+                HTTPService.put(self.database, self.type, self.sid, dataTransService.revert(self.service))
+                    .success(function(data) {
+                        $state.go($state.current, null, {reload: true});
+                    })
+                    .error(function(error){
+                        self.alerts.push({type: 'danger', msg: error});
+                    });
             };
             self.deleteTable = function() {
-                HTTPService.del(self.database, self.type, self.service_id)
-                .success(function(){
-                    $location.path(self.database + '/service'); //.replace().reload(true);
-                }).error(function(error){
-                    self.alerts.push({type: 'danger', msg: error});
-                });
+                HTTPService.del(self.database, self.type, self.sid)
+                    .success(function(){
+                        $state.go('root.listService', {database: self.database}, {reload: true});
+                    })
+                    .error(function(error){
+                        self.alerts.push({type: 'danger', msg: error});
+                    });
             };
     }])
 
-    .controller('ServiceAddCtrl',['$routeParams', 'HTTPService', function($routeParams, HTTPService){
+    .controller('ServiceAddCtrl',['$stateParams', 'HTTPService', function($stateParams, HTTPService){
         var self = this;
         self.formData = {};
         self.alerts = [];
         self.type = 'service';
-        self.database = $routeParams.database;
+        self.database = $stateParams.database;
 
         self.closeAlert = function(index){
             self.alerts.splice(index, 1);
@@ -167,89 +170,18 @@ angular.module('cmdb')
         };
     }])
 
-    .controller('ProjectCtrl', ['$routeParams', '$route', 'projects',
-        function($routeParams, $route, projects){
-            var self = this;
-            self.database = $routeParams.database;
-            self.projects = projects;
-            self.reload = function(){
-                $route.reload();
-            };
-    }])
+    //////////////////////////
+    // Projects Controllers //
+    //////////////////////////
 
-    .controller('ProjectAddCtrl',['$routeParams', '$scope', 'services', 'HTTPService',
-        function($routeParams, $scope, services, HTTPService){
+
+    .controller('ProjectCtrl',
+    ['$stateParams', '$state', '$scope', 'project', 'dataTransService', 'TableService', 'HTTPService',
+        function($stateParams, $state, $scope, project, dataTransService, TableService, HTTPService) {
             var self = this;
+            self.database = $stateParams.database;
             self.type = 'project';
-            self.database = $routeParams.database;
-
-            self.alerts = [];
-            self.closeAlert = function(index){
-                self.alerts.splice(index, 1);
-            };
-
-            self.formData = {}; // 表单数据
-            self.servicesAdded = []; // 表单services input 已添加的数据
-            self.servicesPool = services;
-            // 对input输入的字符进行service匹配
-            $scope.$watch(function(){return self.formData.services},
-                function(newValue, oldValue) {
-                    if (newValue) {
-                        self.match = [];
-                        angular.forEach(self.servicesPool, function(service) {
-                            if (service.indexOf(newValue) >= 0) {
-                                self.match.push(service);
-                            }
-                        });
-                        if(0 != self.match.length) {self.matched = true;}
-                    } else {
-                        self.match = [];
-                        self.matched = false;
-                    }
-            });
-            self.saveService = function(sid){
-                self.servicesAdded.push(sid);
-                // 添加过的service, 下次不会再进行匹配
-                angular.forEach(self.servicesPool, function(service, i){
-                    if(sid == service) {
-                        delete  self.servicesPool[i];
-                    }
-                });
-                self.formData.services = '';
-            };
-            self.deleteService = function(added, index) {
-                // 从 ng-repeat 数组删除 item 如果使用下面的方式
-                // delete self.servicesAdded[index];
-                // 一些内部元素并不会被清除,必须使用 splice 方法
-                self.servicesAdded.splice(index, 1);
-                self.servicesPool.push(added);
-            };
-            self.submit = function(){
-                var data = angular.copy(self.formData);
-                data.services = angular.copy(self.servicesAdded);
-                HTTPService.post(self.database, self.type, self.project_id, data)
-                    .success(function(resp){
-                        self.alerts.push({type: 'success', msg: resp});
-                    })
-                    .error(function(resp){
-                        self.alerts.push({type: 'danger', msg: resp});
-                    });
-                // post的数据加回servicesPool
-                angular.forEach(self.servicesAdded, function (service, index) {
-                    self.servicesAdded.splice(index, 1);
-                    self.servicesPool.push(service);
-                });
-            };
-    }])
-
-    .controller('ProjectIdCtrl',
-    ['$routeParams', '$scope', '$location', '$route',
-     'project', 'dataTransService', 'TableService', 'HTTPService',
-        function($routeParams, $scope, $location, $route, project, dataTransService, TableService, HTTPService) {
-            var self = this;
-            self.database = $routeParams.database;
-            self.type = 'project';
-            self.project_id = $routeParams.project_id;
+            self.pid = $stateParams.pid;
             self.project = project;
 
             self.alerts = [];
@@ -299,23 +231,92 @@ angular.module('cmdb')
             };
             self.saveTable = function() {
                 if(!self.modified) {return}
-                HTTPService.put(self.database, self.type, self.project_id, dataTransService.revert(self.project))
-                .success(function(data) {
-                    $route.reload();
-                }).error(function(error) {
-                    self.alerts.push({type: 'danger', msg: error})
+                HTTPService.put(self.database, self.type, self.pid, dataTransService.revert(self.project))
+                    .success(function(data) {
+                        $state.go($state.current, null, {reload : true})
+                    })
+                    .error(function(error) {
+                        self.alerts.push({type: 'danger', msg: error})
                 });
             };
             self.deleteTable = function(){
-                HTTPService.del(self.database, self.type, self.project_id)
+                HTTPService.del(self.database, self.type, self.pid)
                     .success(function(data) {
-                        $location.path(self.database + '/project').replace().reload(true);
+                        $state.go('root.listProject', {database: self.database}, {reload: true});
                     })
                     .error(function(error) {
                         self.alerts.push({type: 'danger', msg: error});
                     });
             };
     }])
+
+    .controller('ProjectAddCtrl',['$stateParams', '$scope', 'HTTPService',
+        function($stateParams, $scope, HTTPService){
+            var self = this;
+            self.type = 'project';
+            self.database = $stateParams.database;
+            self.servicesPool = $stateParams.servicesPool;
+
+            self.alerts = [];
+            self.closeAlert = function(index){
+                self.alerts.splice(index, 1);
+            };
+
+            self.formData = {}; // 表单数据
+            self.servicesAdded = []; // 表单services input 已添加的数据
+
+
+            // 对input输入的字符进行service匹配
+            $scope.$watch(function(){return self.formData.services},
+                function(newValue, oldValue) {
+                    if (newValue) {
+                        self.match = [];
+                        angular.forEach(self.servicesPool, function(service) {
+                            if (service.indexOf(newValue) >= 0) {
+                                self.match.push(service);
+                            }
+                        });
+                        if(0 != self.match.length) {self.matched = true;}
+                    } else {
+                        self.match = [];
+                        self.matched = false;
+                    }
+                });
+            self.saveService = function(sid){
+                self.servicesAdded.push(sid);
+                // 添加过的service, 下次不会再进行匹配
+                angular.forEach(self.servicesPool, function(service, i){
+                    if(sid == service) {
+                        delete  self.servicesPool[i];
+                    }
+                });
+                self.formData.services = '';
+            };
+            self.deleteService = function(added, index) {
+                // 从 ng-repeat 数组删除 item 如果使用下面的方式
+                // delete self.servicesAdded[index];
+                // 一些内部元素并不会被清除,必须使用 splice 方法
+                self.servicesAdded.splice(index, 1);
+                self.servicesPool.push(added);
+            };
+            self.submit = function(){
+                var data = angular.copy(self.formData);
+                console.log(data);
+                data.services = angular.copy(self.servicesAdded);
+                HTTPService.post(self.database, self.type, self.pid, data)
+                    .success(function(resp){
+                        self.alerts.push({type: 'success', msg: resp});
+                    })
+                    .error(function(resp){
+                        self.alerts.push({type: 'danger', msg: resp});
+                    });
+                // post的数据加回servicesPool
+                angular.forEach(self.servicesAdded, function (service, index) {
+                    self.servicesAdded.splice(index, 1);
+                    self.servicesPool.push(service);
+                });
+            };
+        }])
 ;
 //.controller('ProjectDeploymentCtrl',
 //    ['DeploymentService', '$routeParams',

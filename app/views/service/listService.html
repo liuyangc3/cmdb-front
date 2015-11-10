@@ -1,6 +1,5 @@
-
 <div class="col-md-12">
-  <button type="button" ng-click="sCtrl.reload()">刷新</button>
+  <button type="button" ng-click="reload()">刷新</button>
   <table>
     <thead>
       <tr>
@@ -8,9 +7,9 @@
       </tr>
     </thead>
       <tbody>
-        <tr ng-repeat="service_id in sCtrl.services">
+        <tr ng-repeat="sid in services">
           <td>
-            <a href="{{sCtrl.database}}/service/{{service_id}}">{{service_id}}</a>
+            <a ui-sref="root.service({database: database, sid: sid})">{{sid}}</a>
           </td>
         </tr>
       </tbody>

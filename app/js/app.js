@@ -70,7 +70,6 @@ angular.module('cmdb', [
         //////////////////////////
 
         $stateProvider
-            // 全局 state
             .state('root', {
                 url: '',
                 //abstract: true,
@@ -91,131 +90,164 @@ angular.module('cmdb', [
                             // 不能将 $scope 的一级对象传递到 ui-select
                             // 否则选择的时候 检测不到数据的变化
                             $scope.wrapperObj = {databases: databases};
+                            // 如果之前已经选择过环境,reload后直接显示
+                            //if(globalService.currentDB){$scope.$select.selected = globalService.currentDB;}
                             $scope.$watch('wrapperObj.database', function (newValue, oldValue) {
                                 if (newValue) {
                                     globalService.currentDB = newValue;
                                 }
                             });
+                            $scope.search = function() {
+                                alert($scope.inputText);
+                            };
                         }]
                     },
                     'sidebar': {
                         templateUrl: 'views/sidebar.html'
-                    }
-                }
-            })
-
-
-            .state('root.body', {
-                url: '/',
-                views: {
-                    'main@': {
+                    },
+                    'main': {
                         templateUrl: 'views/main.html',
-                        controller: 'MainCtrl',
-                        controllerAs: 'mCtrl'
+                        controller: 'MainCtrl as mCtrl'
                     }
                 }
             })
+
 
             .state('root.addDatabase', {
                 url: '/addDatabase',
                 views: {
                     'main@': {
                         templateUrl: 'views/database/addDatabase.html',
-                        controller: 'DatabaseCtrl as dbCtrl',
+                        controller: 'DatabaseCtrl as dbCtrl'
                     }
                 }
             })
 
             .state('root.delDatabase', {
-                url : '/delDatabase',
+                url: '/delDatabase',
                 views: {
                     'main@': {
                         templateUrl: 'views/database/delDatabase.html',
-                        controller: 'DatabaseCtrl',
-                        controllerAs: 'dbCtrl'
+                        controller: 'DatabaseCtrl as dbCtrl'
+                    }
+                }
+            })
+
+            .state('root.listService', {
+                url: '/:database/service',
+                params: {
+                  services: null
+                },
+                views: {
+                    'main@': {
+                        templateUrl: 'views/service/listService.html',
+                        controller: ['$scope', '$state', '$stateParams', function($scope, $state, $stateParams) {
+                            $scope.services = $stateParams.services;
+                            $scope.database = $stateParams.database;
+                            $scope.reload = function(){
+                                $state.go($state.current, {services: $scope.services}, {reload: true});
+                            };
+                        }]
+                    }
+                }
+            })
+
+
+            // 单个 service 展示 修改
+            .state('root.service', {
+                url: '/:database/service/:sid',
+                views:{
+                    'main@': {
+                        templateUrl: 'views/service/service.html',
+                        controller: 'ServiceCtrl as sCtrl',
+                        resolve: {
+                            service: ['$stateParams', 'HTTPService', 'dataTransService',
+                                function($stateParams, HTTPService, dataTransService) {
+                                return HTTPService.get($stateParams.database, 'service', $stateParams.sid).
+                                    then(function(resp){
+                                        // 对原始数据进行处理，用于页面展示
+                                        return dataTransService.init(
+                                            dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
+                                        );
+                                    });
+                            }]
+                        }
+                    }
+                }
+            })
+
+            // 添加一个 service
+            .state('root.serviceAdd',{
+                url: '/:database/service/add',
+                views: {
+                    'main@': {
+                        templateUrl: 'views/service/addservice.html',
+                        controller: 'ServiceAddCtrl as sCtrl'
+                    }
+                }
+            })
+
+            .state('root.listProject', {
+                url: '/:database/project',
+                params: {
+                    projects: null
+                },
+                views: {
+                    'main@': {
+                        templateUrl: 'views/project/listProject.html',
+                        controller: ['$scope', '$state', '$stateParams', function($scope, $state, $stateParams) {
+                            $scope.projects = $stateParams.projects;
+                            $scope.database = $stateParams.database;
+                            $scope.reload = function(){
+                                $state.go($state.current, {projects: $scope.projects}, {reload: true});
+                            };
+                        }]
+                    }
+                }
+            })
+
+            // 单个 project 展示 修改
+            .state('root.project', {
+                url: '/:database/project/:pid',
+                views:{
+                    'main@': {
+                        templateUrl: 'views/project/project.html',
+                        controller: 'ProjectCtrl as pCtrl',
+                        resolve: {
+                            project: ['$stateParams', 'HTTPService', 'dataTransService',
+                                function($stateParams, HTTPService, dataTransService) {
+                                    return HTTPService.get($stateParams.database, 'project', $stateParams.pid).
+                                        then(function(resp){
+                                            // 对原始数据进行处理，用于页面展示
+                                            return dataTransService.init(
+                                                dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
+                                            );
+                                        });
+                                }]
+                        }
+                    }
+                }
+            })
+
+            // 添加一个 project
+            .state('root.projectAdd', {
+                url: '/:database/project/add',
+                params: {servicesPool: null},
+                views: {
+                    'main@': {
+                        templateUrl: 'views/project/addProject.html',
+                        controller: 'ProjectAddCtrl as pCtrl'
+                        //resolve: {
+                            //servicesPool: ['$stateParams', 'HTTPService', function ($stateParams, HTTPService) {
+                            //    return HTTPService.list($stateParams.database, 'service').then(function (resp) {
+                            //        return angular.fromJson(resp.data);
+                            //    });
+                            //}]
+                        //}
                     }
                 }
             });
-                //
-                //.state('/:database/service', {
-                //    templateUrl: 'views/service/listService.html',
-                //    controller: 'ServiceCtrl',
-                //    controllerAs: 'sCtrl',
-                //    resolve: {
-                //        services: ['$route', 'HTTPService', function($route, HTTPService){
-                //            return HTTPService.list($route.current.params.database, 'service').then(function(resp){
-                //                return angular.fromJson(resp.data);
-                //            });
-                //        }]
-                //    }
-                //})
-                //.state('/:database/service/add', {
-                //    templateUrl: 'views/service/addservice.html',
-                //    controller: 'ServiceAddCtrl',
-                //    controllerAs: 'sCtrl'
-                //})
-                //.state('/:database/service/:service_id', {
-                //    templateUrl: 'views/service/service.html',
-                //    controller: 'ServiceIdCtrl',
-                //    controllerAs: 'sidCtrl',
-                //    resolve: {
-                //        service: ['$route', 'dataTransService', 'HTTPService',
-                //            function($route, dataTransService, HTTPService) {
-                //                return HTTPService.get($route.current.params.database, 'service', $route.current.params.service_id)
-                //                    .then(function(resp){
-                //                        return dataTransService.init(
-                //                            dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
-                //                        )
-                //                    });
-                //            }]
-                //    }
-                //})
-                //.state('/:database/project', {
-                //    templateUrl: 'views/project/listProject.html',
-                //    controller: 'ProjectCtrl',
-                //    controllerAs: 'pCtrl',
-                //    resolve: {
-                //        projects: ['$route', 'HTTPService', function($route, HTTPService){
-                //            return HTTPService.list($route.current.params.database, 'project').then(function(resp){
-                //                return angular.fromJson(resp.data);
-                //            })
-                //        }]
-                //    }
-                //})
-                //.state('/:database/project/add', {
-                //    templateUrl: 'views/project/addProject.html',
-                //    controller: 'ProjectAddCtrl',
-                //    controllerAs: 'pCtrl',
-                //    resolve: {
-                //        services: ['$route', 'HTTPService', function ($route, HTTPService) {
-                //            return HTTPService.list($route.current.params.database, 'service').then(function (resp) {
-                //                return angular.fromJson(resp.data);
-                //            });
-                //        }]
-                //    }
-                //})
-                //.state('/:database/project/:project_id', {
-                //    templateUrl: 'views/project/project.html',
-                //    controller: 'ProjectIdCtrl',
-                //    controllerAs: 'pidCtrl',
-                //    resolve: {
-                //        project: ['$route', 'dataTransService', 'HTTPService',
-                //            function($route, dataTransService, HTTPService) {
-                //            return HTTPService.get($route.current.params.database, 'project', $route.current.params.project_id)
-                //                .then(function(resp) {
-                //                    return dataTransService.init(
-                //                        dataTransService.excludeKey(angular.fromJson(resp.data), ['_id'])
-                //                    );
-                //                })
-                //        }]
-                //    }
-                //});
 
-
-
-                //otherwise({
-                //    redirectTo: '/'
-                //});
 
             // 如果浏览器不支持html5,$locationProvider使用注释行配置
             //$locationProvider.html5Mode(false).hashPrefix('!');
@@ -233,6 +265,6 @@ angular.module('cmdb', [
         // 当激活contacts.list或者一个他的子孙, 会将 <li> 设为 active
         $rootScope.$state = $state;
         $rootScope.$stateParams = $stateParams;
-        $state.transitionTo('root.body');
+        $state.transitionTo('root');
     }
 ]);

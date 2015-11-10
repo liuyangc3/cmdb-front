@@ -1,9 +1,12 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-collapse collapse">
+      <ul class="nav navbar-brand">
+        <a ui-sref="root">Home</a>
+      </ul>
       <ul class="nav navbar-nav">
         <li>
-          <a href="#">当前环境</a>
+          <span>当前环境</span>
         </li>
         <li>
           <ui-select ng-model="wrapperObj.database" style="min-width: 150px;">
@@ -18,9 +21,9 @@
       </ul>
 
       <div class="nav navbar-nav navbar-right input-group col-md-4">
-        <input type="text" class="form-control" placeholder="Search" ng-model="mCtrl.inputText">
+        <input type="text" class="form-control" placeholder="Search" ng-model="inputText">
         <div class="input-group-btn">
-          <button class="btn btn-default" type="submit" ng-click="mCtrl.search()"><i class="glyphicon glyphicon-search"></i></button>
+          <button class="btn btn-default" type="submit" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button>
         </div>
       </div>
 

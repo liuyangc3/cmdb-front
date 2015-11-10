@@ -1,23 +1,14 @@
 <div class="row">
-
-  <div ng-repeat="item in mCtrl.data">
-    <a href="{{mCtrl.type}}/{{item}}">{{item}}</a>
+  <div>
+    <span>共有
+      <a ui-sref="root.listService({database: mCtrl.database, services: mCtrl.services})">{{mCtrl.services.length}}</a>个服务
+    </span>
+    <a ng-show="mCtrl.database" ui-sref="root.serviceAdd({database: mCtrl.database})">添加服务</a>
   </div>
-
-
-  <span>{{mCtrl.database}}</span>
-
-
-  <div class="col-md-12">
-    <a href="{{mCtrl.database}}/service">list service</a>
-  </div>
-  <div class="col-md-12">
-    <a href="{{mCtrl.database}}/service/add">add service</a>
-  </div>
-  <div class="col-md-12">
-     <a href="{{mCtrl.database}}/project">list project</a>
-  </div>
-  <div class="col-md-12">
-      <a href="{{mCtrl.database}}/project/add">add project</a>
+  <div>
+    <span>共有
+      <a ui-sref="root.listProject({database: mCtrl.database, projects: mCtrl.projects})">{{mCtrl.projects.length}}</a>个项目
+    </span>
+    <a ng-show="mCtrl.database" ui-sref="root.projectAdd({database: mCtrl.database, servicesPool: mCtrl.services})">添加项目</a>
   </div>
 </div>

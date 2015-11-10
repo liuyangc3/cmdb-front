@@ -1,5 +1,5 @@
 <div class="col-md-12">
-  <button type="button" ng-click="pCtrl.reload()">刷新</button>
+  <button type="button" ng-click="reload()">刷新</button>
   <table>
     <thead>
     <tr>
@@ -7,9 +7,9 @@
     </tr>
     </thead>
     <tbody>
-    <tr ng-repeat="project in pCtrl.projects">
+    <tr ng-repeat="pid in projects">
       <td>
-        <a href="{{pCtrl.database}}/project/{{project}}">{{project}}</a>
+        <a ui-sref="root.project({database: database, pid: pid})">{{pid}}</a>
       </td>
     </tr>
     </tbody>

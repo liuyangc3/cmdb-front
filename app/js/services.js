@@ -3,17 +3,17 @@
  */
 'use strict';
 angular.module('cmdb')
-    .factory('msgBus', ['$rootScope', function($rootScope){
-        return {
-            emitMsg: function (msg) {
-                $rootScope.$emit(msg);
-            },
-            onMsg: function (msg, scope, func) {
-                var unbound = $rootScope.$on(msg, func);
-                scope.$on('$destroy', unbound);
-            }
-        }
-    }])
+    //.factory('msgBus', ['$rootScope', function($rootScope){
+    //    return {
+    //        emitMsg: function (msg) {
+    //            $rootScope.$emit(msg);
+    //        },
+    //        onMsg: function (msg, scope, func) {
+    //            var unbound = $rootScope.$on(msg, func);
+    //            scope.$on('$destroy', unbound);
+    //        }
+    //    }
+    //}])
 
     .factory('globalService', function() {
         return {
