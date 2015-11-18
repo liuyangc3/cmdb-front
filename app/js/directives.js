@@ -106,7 +106,9 @@ angular.module('cmdb')
             }
         }}])
 
-    // project --------------------------------------------------------------------------------
+    //////////////////////////
+    // project directives   //
+    //////////////////////////
 
     .directive('projectTableKey', ['$timeout', function($timeout) {
         return {
@@ -128,13 +130,15 @@ angular.module('cmdb')
                     return (
                         scope.bindValue == '_rev' ||
                         scope.bindValue == 'type' ||
+                        scope.bindValue == 'name' ||
                         scope.bindValue == 'services'
                     );
                 };
                 scope.transEditState = function() {
                     // 不能编辑的 key
-                    if('_rev' != scope.bindValue &&
-                        'type' != scope.bindValue &&
+                    if( scope.bindValue != '_rev' &&
+                        scope.bindValue != 'type' &&
+                        scope.bindValue != 'name' &&
                         'services' != scope.bindValue)
                     {
                         scope.showThis = !scope.showThis;
