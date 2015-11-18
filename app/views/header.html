@@ -5,10 +5,10 @@
         <a ui-sref="root">Home</a>
       </ul>
       <ul class="nav navbar-nav">
-        <li>
+        <li class="navbar-brand">
           <span>当前环境</span>
         </li>
-        <li>
+        <li class="navbar-inner">
           <ui-select ng-model="wrapperObj.database" style="min-width: 150px;">
             <ui-select-match placeholder="选择环境">
               <span ng-bind-html="$select.selected"></span>
@@ -20,11 +20,12 @@
         </li>
       </ul>
 
-      <div class="nav navbar-nav navbar-right input-group col-md-4">
+      <div class="nav navbar-nav navbar-right input-group col-md-4 navbar-inner">
         <input type="text" class="form-control" placeholder="Search" ng-model="inputText">
         <div class="input-group-btn">
           <button class="btn btn-default" type="submit" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button>
         </div>
+        <span><a>{{user}}</a></span>
       </div>
 
     </div>

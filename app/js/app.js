@@ -26,6 +26,7 @@ if (typeof String.prototype.format != 'function') {
 var latestId = 0;
 
 angular.module('cmdb', [
+    'ngCookies',
     'ngSanitize',
     'ui.router',
     'ui.select',
@@ -86,7 +87,8 @@ angular.module('cmdb', [
                                     });
                                 }]
                         },
-                        controller: ['$scope', 'databases', 'globalService', function ($scope, databases, globalService) {
+                        controller: ['$scope', '$cookieStore', 'databases', 'globalService', function ($scope, $cookieStore, databases, globalService) {
+                            //$scope.user = $cookieStore.get("user");
                             // 不能将 $scope 的一级对象传递到 ui-select
                             // 否则选择的时候 检测不到数据的变化
                             $scope.wrapperObj = {databases: databases};
