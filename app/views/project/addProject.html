@@ -12,13 +12,13 @@
 <form name="project" class="form-horizontal" ng-submit="pCtrl.submit()">
   <fieldset>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="projectId">项目名称</label>
+      <label class="control-label col-sm-2" for="projectName">项目名称</label>
       <div class="controls col-sm-4">
         <input type="text"
                class="form-control"
-               id="projectId"
+               id="projectName"
                placeholder="项目名称"
-               ng-model="pCtrl.pid"
+               ng-model="pCtrl.formData.name"
                tabindex="1"
                required
                autofocus>

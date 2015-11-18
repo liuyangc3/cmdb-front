@@ -92,39 +92,6 @@ angular.module('cmdb')
         }
     }])
 
-    .factory('ProjectService',['$http','cmdbApiPrefix',
-        function($http, cmdbApiPrefix){
-            return {
-                list: function(database) {
-                    return $http.get('{0}/{1}/project/list'.format(cmdbApiPrefix, database));
-                },
-                get: function(database, project_id) {
-                    return $http.get('{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id));
-                },
-                post: function(database, project_id, formData) {
-                    return $http({
-                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
-                        method: 'POST',
-                        data: formData
-                    });
-                },
-                put: function(database, project_id, formData) {
-                    return $http({
-                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
-                        method: 'PUT',
-                        data: formData
-                    });
-                },
-                del: function (database, project_id) {
-                    return $http({
-                        url: '{0}/{1}/service/{2}'.format(cmdbApiPrefix, database, project_id),
-                        method: 'DELETE'
-                    });
-                }
-            }
-        }
-    ])
-
     .factory('TableService', function() {
         return {
             getRowName: function(data) {

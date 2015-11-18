@@ -254,7 +254,12 @@ angular.module('cmdb')
         function($stateParams, $scope, HTTPService){
             var self = this;
             self.type = 'project';
+            self.projectSubmitPermission = true;
             self.database = $stateParams.database;
+            self.projects = [];
+            angular.forEach($stateParams.projects, function(row) {
+                self.projects.push(row.name);
+            });
             self.servicesPool = $stateParams.servicesPool;
 
             self.alerts = [];
@@ -301,20 +306,32 @@ angular.module('cmdb')
             };
             self.submit = function(){
                 var data = angular.copy(self.formData);
-                console.log(data);
                 data.services = angular.copy(self.servicesAdded);
-                HTTPService.post(self.database, self.type, self.pid, data)
-                    .success(function(resp){
-                        self.alerts.push({type: 'success', msg: resp});
-                    })
-                    .error(function(resp){
-                        self.alerts.push({type: 'danger', msg: resp});
-                    });
-                // post的数据加回servicesPool
-                angular.forEach(self.servicesAdded, function (service, index) {
-                    self.servicesAdded.splice(index, 1);
-                    self.servicesPool.push(service);
+
+                // 检查表单name 是否已经存在于projects
+                angular.forEach(self.projects, function(projectName) {
+                    if(self.formData.name === projectName) {
+                        self.alerts.push({type: 'danger', msg: "Name: " + projectName +" exist"});
+                        self.projectSubmitPermission = false;
+                    }
                 });
+
+                // 提交表单
+                if(self.projectSubmitPermission){
+                    HTTPService.post(self.database, self.type, self.formData.name, data)
+                        .success(function(resp){
+                            self.alerts.push({type: 'success', msg: resp});
+                        })
+                        .error(function(resp){
+                            self.alerts.push({type: 'danger', msg: resp});
+                        });
+                    // post的数据加回servicesPool
+                    angular.forEach(self.servicesAdded, function (service, index) {
+                        self.servicesAdded.splice(index, 1);
+                        self.servicesPool.push(service);
+                    });
+                }
+
             };
         }])
 ;

@@ -234,18 +234,14 @@ angular.module('cmdb', [
             // 添加一个 project
             .state('root.projectAdd', {
                 url: '/:database/project/add',
-                params: {servicesPool: null},
+                params: {
+                    projects: null,
+                    servicesPool: null
+                },
                 views: {
                     'main@': {
                         templateUrl: 'views/project/addProject.html',
                         controller: 'ProjectAddCtrl as pCtrl'
-                        //resolve: {
-                            //servicesPool: ['$stateParams', 'HTTPService', function ($stateParams, HTTPService) {
-                            //    return HTTPService.list($stateParams.database, 'service').then(function (resp) {
-                            //        return angular.fromJson(resp.data);
-                            //    });
-                            //}]
-                        //}
                     }
                 }
             });
