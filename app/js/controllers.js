@@ -3,6 +3,40 @@
  */
 'use strict';
 angular.module('cmdb')
+    .controller('HeaderCtrl', ['$scope', '$cookieStore', 'databases', 'globalService',
+        function ($scope, $cookieStore, databases, globalService) {
+            var self = this;
+
+            // 操作cookie
+            self.user = $cookieStore.get("user");
+
+            // 如果直接将 $scope 的属性传递到 ui-select
+            // 页面上看不到数据，必须将属性放在一个对象里
+            self.wrapperObj = {
+                databases: databases
+            };
+
+
+            // 如果之前已经选择过环境,全局service有数据
+            // reload 后直接显示
+            self.setSelectedDb = function() {
+                console.log("fuck");
+                self.wrapperObj.database = globalService.currentDB;
+            };
+
+            // 监听页面导航 环境下拉菜单
+            // 将数据存放到全局service
+            $scope.$watch(function(){return self.wrapperObj.database}, function (newValue, oldValue) {
+                if (newValue) {
+                    globalService.currentDB = newValue;
+                    self.setSelectedDb();
+                }
+            });
+            self.search = function() {
+                alert($scope.inputText);
+            };
+    }])
+
     .controller('MainCtrl', ['$scope', '$state', 'globalService', 'HTTPService',
         function($scope, $state, globalService, HTTPService) {
             var self = this;
@@ -65,7 +99,6 @@ angular.module('cmdb')
             self.closeAlert = function(index){
                 self.alerts.splice(index, 1);
             };
-            self.pushAlert = function(msg) {
             /*
              controller 传递内部函数给 directive 的时候
              内部函数必须在DOM上调用
@@ -81,6 +114,7 @@ angular.module('cmdb')
              写成闭包的形式,可以使函数在指令内link中调用
              而不是把它传入指令的时候被调用
              */
+            self.pushAlert = function(msg) {
                 return function(){
                     self.alerts.push({type: 'danger', msg: msg});
                 }
@@ -135,39 +169,40 @@ angular.module('cmdb')
             };
             self.deleteTable = function() {
                 HTTPService.del(self.database, self.type, self.sid)
-                    .success(function(){
+                    .success(function(resp) {
                         $state.go('root.listService', {database: self.database}, {reload: true});
                     })
-                    .error(function(error){
+                    .error(function(error) {
                         self.alerts.push({type: 'danger', msg: error});
                     });
             };
     }])
 
-    .controller('ServiceAddCtrl',['$stateParams', 'HTTPService', function($stateParams, HTTPService){
-        var self = this;
-        self.formData = {};
-        self.alerts = [];
-        self.type = 'service';
-        self.database = $stateParams.database;
+    .controller('ServiceAddCtrl',['$stateParams', 'HTTPService',
+        function($stateParams, HTTPService){
+            var self = this;
+            self.formData = {};
+            self.alerts = [];
+            self.type = 'service';
+            self.database = $stateParams.database;
 
-        self.closeAlert = function(index){
-            self.alerts.splice(index, 1);
-        };
+            self.closeAlert = function(index){
+                self.alerts.splice(index, 1);
+            };
 
-        self.submit = function(fromDataInvalid){
-            if(fromDataInvalid) {
-                self.alerts.push({type: 'danger', msg: '格式错误'});
-                return false;
-            }
-            HTTPService.post(self.database, self.type, self.service_id, self.formData)
-            .success(function(resp){
-                self.alerts.push({type: 'success', msg: resp});
-            })
-            .error(function(resp){
-                self.alerts.push({type: 'danger', msg: resp});
-            });
-        };
+            self.submit = function(fromDataInvalid) {
+                if(fromDataInvalid) {
+                    self.alerts.push({type: 'danger', msg: '格式错误'});
+                    return false;
+                }
+                HTTPService.post(self.database, self.type, self.service_id, self.formData)
+                    .success(function(resp) {
+                        self.alerts.push({type: 'success', msg: resp});
+                })
+                    .error(function(resp) {
+                        self.alerts.push({type: 'danger', msg: resp});
+                });
+            };
     }])
 
     //////////////////////////

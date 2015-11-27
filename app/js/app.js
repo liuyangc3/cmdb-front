@@ -77,6 +77,7 @@ angular.module('cmdb', [
                 views: {
                     'header': {
                         templateUrl: 'views/header.html',
+                        controller: 'HeaderCtrl as hCtrl',
                         resolve: {
                             databases: ['$http', 'cmdbApiPrefix', 'globalService',
                                 function ($http, cmdbApiPrefix, globalService) {
@@ -86,23 +87,7 @@ angular.module('cmdb', [
                                         return databases;
                                     });
                                 }]
-                        },
-                        controller: ['$scope', '$cookieStore', 'databases', 'globalService', function ($scope, $cookieStore, databases, globalService) {
-                            //$scope.user = $cookieStore.get("user");
-                            // 不能将 $scope 的一级对象传递到 ui-select
-                            // 否则选择的时候 检测不到数据的变化
-                            $scope.wrapperObj = {databases: databases};
-                            // 如果之前已经选择过环境,reload后直接显示
-                            //if(globalService.currentDB){$scope.$select.selected = globalService.currentDB;}
-                            $scope.$watch('wrapperObj.database', function (newValue, oldValue) {
-                                if (newValue) {
-                                    globalService.currentDB = newValue;
-                                }
-                            });
-                            $scope.search = function() {
-                                alert($scope.inputText);
-                            };
-                        }]
+                        }
                     },
                     'sidebar': {
                         templateUrl: 'views/sidebar.html'
@@ -189,6 +174,7 @@ angular.module('cmdb', [
                 }
             })
 
+            // 项目展示页面
             .state('root.listProject', {
                 url: '/:database/project',
                 params: {
@@ -265,4 +251,13 @@ angular.module('cmdb', [
         $rootScope.$stateParams = $stateParams;
         $state.transitionTo('root');
     }
-]);
+])
+
+.filter('getNameFromCookie', function() {
+        return function(cookieString) {
+            var parts = cookieString.split("|");
+            var base64 = parts[4].split(":")[1];
+            return atob(base64);
+        }
+    })
+;

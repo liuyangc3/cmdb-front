@@ -1,19 +1,21 @@
 <nav class="navbar navbar-default navbar-fixed-top">
   <div class="container">
     <div class="navbar-collapse collapse">
+
       <ul class="nav navbar-brand">
         <a ui-sref="root">Home</a>
       </ul>
+
       <ul class="nav navbar-nav">
         <li class="navbar-brand">
           <span>当前环境</span>
         </li>
         <li class="navbar-inner">
-          <ui-select ng-model="wrapperObj.database" style="min-width: 150px;">
+          <ui-select ng-model="hCtrl.wrapperObj.database" style="min-width: 150px;">
             <ui-select-match placeholder="选择环境">
               <span ng-bind-html="$select.selected"></span>
             </ui-select-match>
-            <ui-select-choices repeat="database in wrapperObj.databases">
+            <ui-select-choices repeat="database in hCtrl.wrapperObj.databases">
               <div ng-bind-html="database"></div>
             </ui-select-choices>
           </ui-select>
@@ -23,10 +25,13 @@
       <div class="nav navbar-nav navbar-right input-group col-md-4 navbar-inner">
         <input type="text" class="form-control" placeholder="Search" ng-model="inputText">
         <div class="input-group-btn">
-          <button class="btn btn-default" type="submit" ng-click="search()"><i class="glyphicon glyphicon-search"></i></button>
+          <button class="btn btn-default" type="submit" ng-click="hCtrl.search()"><i class="glyphicon glyphicon-search"></i></button>
         </div>
-        <span><a>{{user}}</a></span>
+        <span>{{hCtrl.user | getNameFromCookie}}</span>|
+        <a href="logout">logout</a>
       </div>
+
+    </div>
 
     </div>
   </div>
