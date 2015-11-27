@@ -99,21 +99,24 @@ angular.module('cmdb')
             self.closeAlert = function(index){
                 self.alerts.splice(index, 1);
             };
+
             /*
-             controller 传递内部函数给 directive 的时候
+             controller 传递内部函在 directive 内部被调用
              内部函数必须在DOM上调用
-             例如指令foo 的 scope 是 { bar: '&'}
-             这样写是可以的：
-             <foo bar="modifyTableKey(arg1, arg2)></foo>"
-             在指令中可以这样调用:
-             bar({arg1: true_arg1, arg2: true_arg2})
 
-             而这样写不可以：
-             <foo bar="modifyTableKey"></foo>"
+             例如controller TestCtrl中
+             self.funcFoo = function(arg1,arg2) {...}
 
-             写成闭包的形式,可以使函数在指令内link中调用
-             而不是把它传入指令的时候被调用
-             */
+             在DOM中将 funcFoo 传递到指令 foo
+             "<foo func-bar="TestCtrl.funcFoo(arg1, arg2)></foo>"
+
+             在指令 foo 的 scope 内使用 funcBar 接收 controller 的函数
+             scope :{ funcBar: '&'}
+
+             这样在指令foo的link过程中调用funcBar 其结果与调用 TestCtrl 的 funcFoo 相同
+
+             这种把funcFoo写成闭包的形式,可以实现controller函数 子指令内link中被调用
+            */
             self.pushAlert = function(msg) {
                 return function(){
                     self.alerts.push({type: 'danger', msg: msg});
