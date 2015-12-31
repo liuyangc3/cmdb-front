@@ -35,7 +35,8 @@ angular.module('cmdb')
                 alert($scope.inputText);
             };
             self.logout = function() {
-                $state.go('root', null, {reload: true});
+                $cookieStore.remove("user");
+                location.reload();
             }
     }])
 
