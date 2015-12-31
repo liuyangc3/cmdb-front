@@ -1,0 +1,15 @@
+<div class="col-md-10 col-md-offset-2">
+  <div ng-show="!database" class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    请选择环境
+  </div>an>
+  <div ng-show="database">
+    <span>共有{{projects.length}}个项目</span>
+    <a ui-sref="root.projectAdd({database: database, projects:mCtrl.projects, servicesPool: mCtrl.services})">添加项目</a>
+  </div>
+
+
+  <div ng-repeat="project in projects">
+    <a ui-sref="root.project({database: database, pid: project.id})">{{ project.name }}</a>
+  </div>
+</div>

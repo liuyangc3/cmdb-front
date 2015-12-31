@@ -1,0 +1,21 @@
+<div class="col-md-10 col-md-offset-2">
+  <div ng-show="!database" class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    请选择环境
+  </div>
+  <span ng-show="database">共有{{services.length}}个服务</span>
+  <a ng-show="database" ui-sref="root.serviceAdd({database: database})">添加服务</a>
+  <br/>
+  <div ng-show="reduce">
+    <span>展开所有</span>
+    <input type="checkbox" ng-model="showAll">
+  </div>
+
+  <div ng-repeat="(type, serviceIdArray) in reduce">
+    <input type="checkbox" ng-model="showThis">
+    <span>{{ type }}: {{ serviceIdArray.length }}</span>
+    <div ng-repeat="sid in serviceIdArray" ng-show="showAll||showThis" >
+      <a ui-sref="root.service({database: database, sid: sid})">{{ sid }}</a>
+    </div>
+  </div>
+</div>

@@ -58,6 +58,36 @@ angular.module('cmdb')
             });
     }])
 
+    .controller('servicePanelCtrl', ['$scope', 'globalService', 'HTTPService',
+        function($scope, globalService, HTTPService){
+            $scope.$watch(function(){return globalService.currentDB}, function(newValue,o) {
+                if(newValue) {
+                    $scope.database = newValue;
+                    HTTPService.list(newValue, 'service').then(function(resp){
+                        $scope.services = angular.fromJson(resp.data);
+                    });
+                    HTTPService.get(newValue, 'service', 'reduce').then(function(resp){
+                        $scope.reduce = angular.fromJson(resp.data);
+                    });
+                }
+            });
+        }])
+
+    .controller('projectPanelCtrl', ['$scope', 'globalService', 'HTTPService',
+        function($scope, globalService, HTTPService){
+            $scope.$watch(function(){return globalService.currentDB}, function(newValue,o) {
+                if(newValue) {
+                    $scope.database = newValue;
+                    HTTPService.list(newValue, 'project').then(function(resp){
+                        $scope.projects = angular.fromJson(resp.data);
+                    });
+                    HTTPService.list(newValue, 'service').then(function(resp){
+                        $scope.services = angular.fromJson(resp.data);
+                    });
+                }
+            });
+        }])
+
     .controller('DatabaseCtrl', ['$scope', '$http', '$state', 'globalService', 'cmdbApiPrefix',
         function($scope, $http, $state, globalService, cmdbApiPrefix) {
             var self = this;
@@ -297,11 +327,14 @@ angular.module('cmdb')
             self.type = 'project';
             self.projectSubmitPermission = true;
             self.database = $stateParams.database;
-            self.projects = [];
-            angular.forEach($stateParams.projects, function(row) {
-                self.projects.push(row.name);
-            });
             self.servicesPool = $stateParams.servicesPool;
+
+
+            //self.projects = [];  project.name 数组
+            //angular.forEach($stateParams.projects, function(row) {
+            //    self.projects.push(row.name);
+            //});
+
 
             self.alerts = [];
             self.closeAlert = function(index){
@@ -346,20 +379,21 @@ angular.module('cmdb')
                 self.servicesPool.push(added);
             };
             self.submit = function(){
-                var data = angular.copy(self.formData);
-                data.services = angular.copy(self.servicesAdded);
+                var uuid = guid();
 
-                // 检查表单name 是否已经存在于projects
-                angular.forEach(self.projects, function(projectName) {
-                    if(self.formData.name === projectName) {
-                        self.alerts.push({type: 'danger', msg: "Name: " + projectName +" exist"});
+                // 检查 uuid 是否已经存在于 projects.id
+                angular.forEach(self.projects, function(project) {
+                    if(uuid === project.id) {
                         self.projectSubmitPermission = false;
+                        self.alerts.push({type: 'danger', msg: "uuid exist, please retry"});
                     }
                 });
 
                 // 提交表单
                 if(self.projectSubmitPermission){
-                    HTTPService.post(self.database, self.type, self.formData.name, data)
+                    var data = angular.copy(self.formData);
+                    data.services = angular.copy(self.servicesAdded);
+                    HTTPService.post(self.database, self.type, uuid, data)
                         .success(function(resp){
                             self.alerts.push({type: 'success', msg: resp});
                         })
@@ -376,6 +410,17 @@ angular.module('cmdb')
             };
         }])
 ;
+
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+            .toString(16)
+            .substring(1);
+    }
+    return s4() + s4() + s4() + s4()
+        + s4()  + s4() + s4() + s4();
+}
+
 //.controller('ProjectDeploymentCtrl',
 //    ['DeploymentService', '$routeParams',
 //    function (DeploymentService, $routeParams){

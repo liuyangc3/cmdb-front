@@ -1,9 +1,8 @@
-<div class="row">
+<div class="col-md-10 col-md-offset-2">
   <div>
     <span>共有
       <a ui-sref="root.listService({database: mCtrl.database, services: mCtrl.services})">{{mCtrl.services.length}}</a>个服务
     </span>
-    <a ng-show="mCtrl.database" ui-sref="root.serviceAdd({database: mCtrl.database})">添加服务</a>
   </div>
   <div>
     <span>共有

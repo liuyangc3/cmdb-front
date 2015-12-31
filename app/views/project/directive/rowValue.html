@@ -4,7 +4,7 @@
     <span>{{service}}</span><a href ng-click="delService($index)">x</a>
   </b>
 
-  <span ng-show="show()" class="col-md-4" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
+  <span ng-show="show()" title="双击编辑" ng-dblclick="transEditState()">{{bindValue}}</span>
   <label>
     <input ng-show="!showThis" type="text" ng-model="inputText" />
   </label>

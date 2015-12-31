@@ -99,7 +99,18 @@ angular.module('cmdb', [
                 }
             })
 
-            // 环境的添加和删除
+            //////////////////////////
+            // Database management  //
+            //////////////////////////
+            .state('root.databasePanel', {
+                url: '/databasePanel',
+                views: {
+                    'main@':{
+                        templateUrl: 'views/main/databasePanel.html'
+                    }
+                }
+            })
+
             .state('root.addDatabase', {
                 url: '/addDatabase',
                 views: {
@@ -116,6 +127,20 @@ angular.module('cmdb', [
                     'main@': {
                         templateUrl: 'views/database/delDatabase.html',
                         controller: 'DatabaseCtrl as dbCtrl'
+                    }
+                }
+            })
+
+            /////////////////////////
+            // Service management  //
+            /////////////////////////
+
+            .state('root.servicePanel', {
+                url: '/servicePanel',
+                views: {
+                    'main@':{
+                        templateUrl: 'views/main/servicePanel.html',
+                        controller: 'servicePanelCtrl'
                     }
                 }
             })
@@ -139,8 +164,6 @@ angular.module('cmdb', [
                 }
             })
 
-
-            // 单个 service 展示 修改
             .state('root.service', {
                 url: '/:database/service/:sid',
                 views:{
@@ -174,7 +197,20 @@ angular.module('cmdb', [
                 }
             })
 
-            // 项目展示页面
+            /////////////////////////
+            // Project management  //
+            /////////////////////////
+
+            .state('root.projectPanel', {
+                url: '/projectPanel',
+                views: {
+                    'main@':{
+                        templateUrl: 'views/main/projectPanel.html',
+                        controller: 'projectPanelCtrl'
+                    }
+                }
+            })
+
             .state('root.listProject', {
                 url: '/:database/project',
                 params: {
