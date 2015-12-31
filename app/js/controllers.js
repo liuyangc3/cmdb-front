@@ -20,7 +20,6 @@ angular.module('cmdb')
             // 如果之前已经选择过环境,全局service有数据
             // reload 后直接显示
             self.setSelectedDb = function() {
-                console.log("fuck");
                 self.wrapperObj.database = globalService.currentDB;
             };
 
@@ -217,8 +216,8 @@ angular.module('cmdb')
     ['$stateParams', '$state', '$scope', 'project', 'dataTransService', 'TableService', 'HTTPService',
         function($stateParams, $state, $scope, project, dataTransService, TableService, HTTPService) {
             var self = this;
-            self.database = $stateParams.database;
             self.type = 'project';
+            self.database = $stateParams.database;
             self.pid = $stateParams.pid;
             self.project = project;
 

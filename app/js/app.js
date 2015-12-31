@@ -99,7 +99,7 @@ angular.module('cmdb', [
                 }
             })
 
-
+            // 环境的添加和删除
             .state('root.addDatabase', {
                 url: '/addDatabase',
                 views: {
@@ -257,7 +257,7 @@ angular.module('cmdb', [
         return function(cookieString) {
             var parts = cookieString.split("|");
             var base64 = parts[4].split(":")[1];
-            return atob(base64);
+            return atob(base64).replace(/^"|"$/g, '');
         }
     })
 ;
