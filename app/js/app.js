@@ -98,6 +98,9 @@ angular.module('cmdb', [
                     }
                 }
             })
+            .state('root.logout', {
+                url: 'logout'
+            })
 
             // 环境的添加和删除
             .state('root.addDatabase', {
