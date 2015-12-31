@@ -1,45 +1,46 @@
+<div class="col-md-10 col-md-offset-2">
+  <ul id="toolbar" class="row">
+    <li><button class="col-md-2 save" ng-click="pCtrl.saveTable()">Save Project</button></li>
+    <li><button class="col-md-2 add" ng-click="pCtrl.newTableRow()">Add Field</button></li>
+    <li><button class="col-md-2 delete" ng-click="pCtrl.deleteTable()">Delete Project</button></li>
+  </ul>
 
-<ul id="toolbar" class="row">
-  <li><button class="col-md-2 save" ng-click="pCtrl.saveTable()">Save Project</button></li>
-  <li><button class="col-md-2 add" ng-click="pCtrl.newTableRow()">Add Field</button></li>
-  <li><button class="col-md-2 delete" ng-click="pCtrl.deleteTable()">Delete Project</button></li>
-</ul>
-
-<div>
-  <table class="table table-hover">
-    <thead>
-    <tr class="row">
-      <th>key</th>
-      <th>value</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr class="row" ng-repeat="(key, data) in pCtrl.project">
-      <th >
-        <project-table-key bind-value="key"
-                           modify-table-key="pCtrl.modifyRowKey(key, newkey)"
-                           delete-row="pCtrl.deleteTableRow(key)">
-        </project-table-key>
-      </th>
-      <td>
-        <project-table-value  current-db="pCtrl.database"
-                              bind-key="key"
-                              bind-value="data.v"
-                              modify-row-value="pCtrl.modifyRowValue(key, value)"
-                              push-alert="pCtrl.pushAlert(msg)">
-        </project-table-value>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-</div>
-
-<script type="text/ng-template" id="alert.html">
-  <div class="alert" style="background-color:#fa39c3;color:white" role="alert">
-    <div ng-transclude></div>
+  <div>
+    <table class="table table-hover">
+      <thead>
+      <tr class="row">
+        <th>key</th>
+        <th>value</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="row" ng-repeat="(key, data) in pCtrl.project">
+        <th >
+          <project-table-key bind-value="key"
+                             modify-table-key="pCtrl.modifyRowKey(key, newkey)"
+                             delete-row="pCtrl.deleteTableRow(key)">
+          </project-table-key>
+        </th>
+        <td>
+          <project-table-value  current-db="pCtrl.database"
+                                bind-key="key"
+                                bind-value="data.v"
+                                modify-row-value="pCtrl.modifyRowValue(key, value)"
+                                push-alert="pCtrl.pushAlert(msg)">
+          </project-table-value>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
-</script>
 
-<uib-alert ng-repeat="alert in pCtrl.alerts" type="{{alert.type}}" close="pCtrl.closeAlert($index)">
-  {{alert.msg}}
-</uib-alert>
+  <script type="text/ng-template" id="alert.html">
+    <div class="alert" style="background-color:#fa39c3;color:white" role="alert">
+      <div ng-transclude></div>
+    </div>
+  </script>
+
+  <uib-alert ng-repeat="alert in pCtrl.alerts" type="{{alert.type}}" close="pCtrl.closeAlert($index)">
+    {{alert.msg}}
+  </uib-alert>
+</div>
