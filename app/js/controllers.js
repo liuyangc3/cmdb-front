@@ -3,8 +3,8 @@
  */
 'use strict';
 angular.module('cmdb')
-    .controller('HeaderCtrl', ['$scope', '$cookieStore', 'databases', 'globalService',
-        function ($scope, $cookieStore, databases, globalService) {
+    .controller('HeaderCtrl', ['$scope', '$state', '$cookieStore', 'databases', 'globalService',
+        function ($scope, $state, $cookieStore, databases, globalService) {
             var self = this;
 
             // 操作cookie
@@ -34,6 +34,9 @@ angular.module('cmdb')
             self.search = function() {
                 alert($scope.inputText);
             };
+            self.logout = function() {
+                $state.go('root', null, {reload: true});
+            }
     }])
 
     .controller('MainCtrl', ['$scope', '$state', 'globalService', 'HTTPService',
