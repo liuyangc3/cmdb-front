@@ -329,13 +329,6 @@ angular.module('cmdb')
             self.database = $stateParams.database;
             self.servicesPool = $stateParams.servicesPool;
 
-
-            //self.projects = [];  project.name 数组
-            //angular.forEach($stateParams.projects, function(row) {
-            //    self.projects.push(row.name);
-            //});
-
-
             self.alerts = [];
             self.closeAlert = function(index){
                 self.alerts.splice(index, 1);
@@ -343,7 +336,6 @@ angular.module('cmdb')
 
             self.formData = {}; // 表单数据
             self.servicesAdded = []; // 表单services input 已添加的数据
-
 
             // 对input输入的字符进行service匹配
             $scope.$watch(function(){return self.formData.services},
